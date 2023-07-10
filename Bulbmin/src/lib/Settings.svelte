@@ -1,7 +1,6 @@
 <script lang="ts">
     import StringSettingsOption from "./StringSettingsOption.svelte";
     import {relaunch} from "@tauri-apps/api/process";
-    import {onMount} from "svelte";
     import {AVAILABLE_SETTINGS, generateDefaultSettings, PendingSettings} from "../util/settings"
     import {sleep} from "../util/sleep";
 

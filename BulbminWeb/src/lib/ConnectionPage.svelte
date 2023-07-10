@@ -1,7 +1,7 @@
 <script lang="ts">
 
 
-    import {onCustom, parseJSONMessage, webClient, type WebClient} from "../connection";
+    import {heartbeatTimeout, onCustom, parseJSONMessage, webClient, type WebClient} from "../connection";
     import type {
         ToWebSetAvailableKeys,
         WebboundUserAccept,
@@ -17,7 +17,7 @@
 
     let status : "idle" | "connecting" | "connected" = "idle"
 
-    let url = import.meta.env.DEV ? "ws://localhost:8081/web/connect" : import.meta.env.VITE_WEBSOCKET_SERVER
+    let url = import.meta.env.DEV ? import.meta.env.VITE_WEBSOCKET_SERVER_DEV : import.meta.env.VITE_WEBSOCKET_SERVER
     console.log()
 
     let declinedConnection : string = undefined
@@ -31,6 +31,8 @@
 
         let webSocket = new WebSocket(url)
 
+        let timeout = setTimeout(heartbeatTimeout, 5000)
+
         webSocket.addEventListener("error", (evt) => {
             declinedConnection = "An error occurred connecting to the WebSocket. Is the server up?"
             status = "idle"
@@ -38,7 +40,10 @@
         })
 
         webSocket.addEventListener("message", (evt) => {
-            if (evt.data == "ping") webSocket.send("pong")
+            if (evt.data != "ping") return
+            clearTimeout(timeout)
+            timeout = setTimeout(heartbeatTimeout, 5000)
+            webSocket.send("pong")
         })
 
         webSocket.addEventListener("open", (evt) => {

@@ -1,4 +1,4 @@
-import {defineConfig} from "vite";
+import {defineConfig, UserConfig} from "vite";
 import {svelte, vitePreprocess} from "@sveltejs/vite-plugin-svelte";
 import sveltePreprocess from "svelte-preprocess";
 import {nodePolyfills} from "vite-plugin-node-polyfills";
@@ -9,7 +9,7 @@ const mobile =
     process.env.TAURI_PLATFORM === "ios";
 
 // https://vitejs.dev/config/
-export default defineConfig(async () => ({
+export default defineConfig(async () : Promise<UserConfig> => ({
     plugins: [
         svelte({
             preprocess: [

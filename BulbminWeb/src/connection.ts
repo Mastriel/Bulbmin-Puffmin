@@ -1,4 +1,4 @@
-import {type WebsocketMessage} from "communication/src/connections";
+import type {WebsocketMessage} from "communication/src/connections";
 import {type Writable, writable} from "svelte/store";
 import type {Fetchable} from "./fetchable";
 import {fetchable} from "./fetchable";
@@ -40,5 +40,8 @@ export type WebClient = {
     availableKeys: string[]
 }
 
+export const heartbeatTimeout = (ws: WebSocket) => {
+    ws.close(1000, "Timeout")
+}
 
 export const webClient : Fetchable<WebClient> = fetchable(undefined)

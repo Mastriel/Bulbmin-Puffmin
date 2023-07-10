@@ -1,7 +1,6 @@
 <script lang="ts">
     import {page, type PageName, setPageFromName} from "./util/page";
 
-
     const selectPage = (name: PageName) => {
         setPageFromName(name)
     }
