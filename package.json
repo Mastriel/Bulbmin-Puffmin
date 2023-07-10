@@ -1,0 +1,9 @@
+{
+  "name": "bulbmin-puffmin",
+  "workspaces": [
+    "Bulbmin",
+    "Puffmin",
+    "Communication",
+    "BulbminWeb"
+  ]
+}

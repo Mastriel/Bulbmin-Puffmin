@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: Oswald;
+  src: url(Oswald.woff2);
+}
+
+:root {
+  font-family: Oswald, serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+
+  color: #dedddd;
+  background-color: #272a2c;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+h2 {
+  font-size: 1.75em;
+}
+
+h3 {
+  font-size: 1.5em;
+}
+
+h4 {
+  font-size: 1.25em;
+}
+
