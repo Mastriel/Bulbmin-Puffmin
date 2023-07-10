@@ -28,16 +28,21 @@
             name: "advanced"
         },
     ]
+
+    const connect = () => {
+
+    }
 </script>
 
 
 <div class="flex w-full h-screen flex-row">
     <div class="w-40">
         <h2 class="text-center mt-4">Bulbmin</h2>
+        <button class="text-center mt-4 styled" on:click={connect} style="width:90%">Connect</button>
         <div class="flex items-center h-3/4">
             <div>
                 {#each pages as iPage}
-                    <button class="block pl-4 mt-2 mb-2 option" on:click={()=>selectPage(iPage.name)} class:selected={$page.name === iPage.name}>{iPage.displayName}</button>
+                    <a class="block pl-4 mt-2 mb-2 option cursor-pointer" on:click={()=>selectPage(iPage.name)} class:selected={$page.name === iPage.name}>{iPage.displayName}</a>
                 {/each}
             </div>
         </div>

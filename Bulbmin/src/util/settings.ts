@@ -20,7 +20,21 @@ export const AVAILABLE_SETTINGS : Setting[] = [
         id: "server-address",
         defaultValue: "wss://129.146.118.7:8081/web/connect",
         validator: input => []
-    }
+    },
+    {
+        type: "string",
+        name: "Client Name",
+        id: "room-name",
+        defaultValue: "My room",
+        validator: input => []
+    },
+    {
+        type: "string",
+        name: "Password",
+        id: "room-password",
+        defaultValue: "password",
+        validator: input => []
+    },
 ]
 
 export const getSettingValue = <T>(key: Setting) : T => {

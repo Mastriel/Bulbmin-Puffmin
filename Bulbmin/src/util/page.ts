@@ -2,6 +2,7 @@ import {fetchable} from "./fetchable";
 import type {SvelteComponent} from "svelte";
 import SettingsComponent from "../lib/Settings.svelte";
 import InvalidPage from "../lib/InvalidPage.svelte";
+import PlayersPage from "../lib/PlayersPage.svelte";
 
 
 export type PageName = "settings" | "modes" | "advanced" | "players"
@@ -22,7 +23,7 @@ export const getPageComponentFromName = (name: PageName) : typeof SvelteComponen
         case "advanced":
             return InvalidPage;
         case "players":
-            return InvalidPage;
+            return PlayersPage;
         default:
             return InvalidPage;
     }
