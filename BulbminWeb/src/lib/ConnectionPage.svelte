@@ -37,6 +37,10 @@
             if (button) button.disabled = false
         })
 
+        webSocket.addEventListener("message", (evt) => {
+            if (evt.data == "ping") webSocket.send("pong")
+        })
+
         webSocket.addEventListener("open", (evt) => {
             webSocket.send(JSON.stringify(<WebConnectToServerRequest>{
                 type: "handshake_request_web",
