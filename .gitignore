@@ -1,4 +1,5 @@
 /node_modules/
 /Puffmin/node_modules/
+/Bulbmin/src-tauri/target/
 /BulbminWeb/node_modules/
 /Bulbmin/node_modules/
