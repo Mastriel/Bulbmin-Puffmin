@@ -72,6 +72,11 @@
                 status = "idle"
                 if (button) button.disabled = false
             })
+            webSocket.addEventListener("error", (evt) => {
+                declinedConnection = "An error occurred connecting to the WebSocket. Is the server up?"
+                status = "idle"
+                if (button) button.disabled = false
+            })
         })
     }
 </script>
