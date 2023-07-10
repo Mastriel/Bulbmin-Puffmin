@@ -31,6 +31,12 @@
 
         let webSocket = new WebSocket(url)
 
+        webSocket.addEventListener("error", (evt) => {
+            declinedConnection = "An error occurred connecting to the WebSocket. Is the server up?"
+            status = "idle"
+            if (button) button.disabled = false
+        })
+
         webSocket.addEventListener("open", (evt) => {
             webSocket.send(JSON.stringify(<WebConnectToServerRequest>{
                 type: "handshake_request_web",
@@ -69,11 +75,6 @@
 
             webSocket.addEventListener("close", (evt) => {
                 declinedConnection = evt.reason
-                status = "idle"
-                if (button) button.disabled = false
-            })
-            webSocket.addEventListener("error", (evt) => {
-                declinedConnection = "An error occurred connecting to the WebSocket. Is the server up?"
                 status = "idle"
                 if (button) button.disabled = false
             })
