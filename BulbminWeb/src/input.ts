@@ -7,48 +7,49 @@ import {fetchable} from "./fetchable";
 export const pressedKeys = fetchable<PressedKeyMask>({})
 
 
+export const sendKey = (key: Key) => {
+    if (!webClient.get().availableKeys.includes(key)) return
+    if (pressedKeys.get()[key]) return
+    webClient.get().ws.send(JSON.stringify(<FromWebUserKeyPress>{
+        key: key,
+        type: "user_keypress"
+    }))
+    pressedKeys.update((it) => {
+        it[key] = true
+        return it
+    })
+}
+export const sendKeyUp = (key: Key) => {
+    if (!webClient.get().availableKeys.includes(key)) return
+    webClient.get().ws.send(JSON.stringify(<FromWebUserKeyUnpress>{
+        key: key,
+        type: "user_keyunpress"
+    }))
+    pressedKeys.update((it) => {
+        it[key] = false
+        return it
+    })
+}
+
 window.addEventListener("keydown", (ev) => {
     if (!webClient.get()) return;
 
-    if (ev.code == "Tab") {
-        ev.preventDefault()
-    }
+    ev.preventDefault()
 
-    const sendKey = (key: Key) => {
-        if (!webClient.get().availableKeys.includes(key)) return
-        if (pressedKeys.get()[key]) return
-        webClient.get().ws.send(JSON.stringify(<FromWebUserKeyPress>{
-            key: key,
-            type: "user_keypress"
-        }))
-        pressedKeys.update((it) => {
-            it[key] = true
-            return it
-        })
-    }
+
     let key = convertNormalKey(ev.key)
-    if (key) {
+    if (key && !pressedKeys.get()[key]) {
         sendKey(key)
         return
     }
     key = convertKeyCode(ev.code)
-    sendKey(key)
+    if (!pressedKeys.get()[key]) sendKey(key)
 })
 
 window.addEventListener("keyup", (ev) => {
     if (!webClient.get()) return;
 
-    const sendKeyUp = (key: Key) => {
-        if (!webClient.get().availableKeys.includes(key)) return
-        webClient.get().ws.send(JSON.stringify(<FromWebUserKeyUnpress>{
-            key: key,
-            type: "user_keyunpress"
-        }))
-        pressedKeys.update((it) => {
-            it[key] = false
-            return it
-        })
-    }
+
     let key = convertNormalKey(ev.key)
     if (key) {
         sendKeyUp(key)
@@ -98,6 +99,8 @@ export const convertKeyCode = (str: string) : Key => {
             return "Meta"
         case "Space":
             return "Space"
+        case "Period":
+            return "Dot"
     }
 }
 

@@ -120,6 +120,7 @@ fn get_key(string: &str) -> Result<KeybdKey, &str> {
         "DownArrow" => Ok(KeybdKey::DownKey),
         "Meta" => Ok(KeybdKey::LSuper),
         "Space" => Ok(KeybdKey::SpaceKey),
+        "Dot" => Ok(KeybdKey::PeriodKey),
         _ => Err("invalid key")
     }
 }

@@ -7,7 +7,7 @@
         WebboundUserAccept,
         WebConnectToServerRequest
     } from "communication/src/connections";
-    import {pressedKeys} from "../input";
+    import {pressedKeys, sendKey, sendKeyUp} from "../input";
 
     let username : string
     let clientName : string
@@ -132,7 +132,7 @@
     </main>
     <div class="flex-row mt-16" style="width: 80vw;">
         {#each $webClient.availableKeys as key}
-            <div class="inline-block key mt-4 bg-slate-700 bg-opacity-50 border border-slate-600 rounded drop-shadow-md" class:font-bold={$pressedKeys[key] === true}>{key}</div>
+            <div on:mousedown={() => sendKey(key)} on:mouseup={() => sendKeyUp(key)} class="inline-block cursor-pointer key mt-4 bg-slate-700 bg-opacity-50 border border-slate-600 rounded drop-shadow-md" class:font-bold={$pressedKeys[key] === true}>{key}</div>
         {/each}
     </div>
 {/if}
