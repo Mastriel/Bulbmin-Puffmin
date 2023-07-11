@@ -4,4 +4,4 @@
 /BulbminWeb/node_modules/
 /Bulbmin/node_modules/
 /Communication/node_modules/
-*.pem
+/Puffmin/dist/
