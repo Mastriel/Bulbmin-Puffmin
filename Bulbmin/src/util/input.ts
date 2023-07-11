@@ -51,7 +51,8 @@ export type Key =
     "RightArrow" |
     "UpArrow" |
     "DownArrow" |
-    "Meta"
+    "Meta" |
+    "Space"
 
 export type MouseButton =
     "Left" |

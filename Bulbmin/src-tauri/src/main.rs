@@ -120,6 +120,7 @@ fn get_key(string: &str) -> Result<Key, &str> {
         "UpArrow" => Ok(Key::UpArrow),
         "DownArrow" => Ok(Key::DownArrow),
         "Meta" => Ok(Key::Meta),
+        "Space" => Ok(Key::Space),
         _ => Err("invalid key")
     }
 }

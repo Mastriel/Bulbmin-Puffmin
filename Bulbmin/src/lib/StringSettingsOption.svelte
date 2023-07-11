@@ -14,5 +14,5 @@
     }
 </script>
 
-<p>{setting.name}</p>
+<p class="mt-4">{setting.name}</p>
 <input type="text" value={value} class="bg-gray-600 pl-2 pr-2 rounded w-1/2" on:change={change}>

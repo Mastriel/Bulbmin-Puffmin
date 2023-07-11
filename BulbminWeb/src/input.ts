@@ -93,6 +93,8 @@ export const convertKeyCode = (str: string) : Key => {
         case "MetaLeft":
         case "MetaRight":
             return "Meta"
+        case "Space":
+            return "Space"
     }
 }
 

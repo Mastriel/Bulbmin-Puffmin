@@ -31,7 +31,7 @@ export const AVAILABLE_SETTINGS : Setting[] = [
     {
         type: "string",
         name: "Password",
-        id: "room-password",
+        id: "password",
         defaultValue: "password",
         validator: input => []
     },

@@ -1,5 +1,7 @@
 <script lang="ts">
     import {page, type PageName, setPageFromName} from "./util/page";
+    import {client, Client, connectionError} from "./util/connection";
+    import {cli, notification} from "@tauri-apps/api";
 
     const selectPage = (name: PageName) => {
         setPageFromName(name)
@@ -29,8 +31,13 @@
         },
     ]
 
-    const connect = () => {
+    connectionError.subscribe((it) => {
+        if (it) notification.sendNotification({title: "Bulbmin", body: it!})
+        console.log("wah!")
+    })
 
+    const connect = () => {
+        if (!$client) $client = new Client()
     }
 </script>
 
@@ -38,7 +45,7 @@
 <div class="flex w-full h-screen flex-row">
     <div class="w-40">
         <h2 class="text-center mt-4">Bulbmin</h2>
-        <button class="text-center mt-4 styled" on:click={connect} style="width:90%">Connect</button>
+        <button class="text-center styled" on:click={connect} style="width:90%; margin-top: 1em">Connect</button>
         <div class="flex items-center h-3/4">
             <div>
                 {#each pages as iPage}

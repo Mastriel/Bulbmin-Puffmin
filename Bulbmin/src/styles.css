@@ -46,6 +46,14 @@ button.styled {
   padding-right: 0.4em;
   padding-top: 0.2em;
   padding-bottom: 0.2em;
-  background-color: #425440;
+  background-color: #2b3a3d;
+  border-color: #384d50;
+  border-style: solid;
+  border-width: 1px;
   margin: 0.4em;
+}
+
+button.styled:hover {
+  background-color: #36494d;
+
 }
