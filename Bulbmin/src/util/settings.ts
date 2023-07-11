@@ -18,7 +18,7 @@ export const AVAILABLE_SETTINGS : Setting[] = [
         type: "string",
         name: "Server Address (only use servers you trust!)",
         id: "server-address",
-        defaultValue: "wss://puffmin.calathea.dev/web/connect",
+        defaultValue: "wss://puffmin.calathea.dev/client/connect",
         validator: input => []
     },
     {
