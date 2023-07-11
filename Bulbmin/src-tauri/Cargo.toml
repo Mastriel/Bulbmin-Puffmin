@@ -19,7 +19,7 @@ rustflags = ["-C", "link-arg=-fuse-ld=lld"]
 tauri = { version = "1.2", features = ["api-all"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-enigo = "0.1.2"
+inputbot = { git = "https://github.com/obv-mikhail/InputBot", branch = "develop" }
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

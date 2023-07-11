@@ -10,6 +10,9 @@ export const pressedKeys = fetchable<PressedKeyMask>({})
 window.addEventListener("keydown", (ev) => {
     if (!webClient.get()) return;
 
+    if (ev.code == "Tab") {
+        ev.preventDefault()
+    }
 
     const sendKey = (key: Key) => {
         if (!webClient.get().availableKeys.includes(key)) return
@@ -82,13 +85,13 @@ export const convertKeyCode = (str: string) : Key => {
             return "Backspace"
         case "Enter":
             return "Enter"
-        case "LeftArrow":
+        case "ArrowLeft":
             return "LeftArrow"
-        case "RightArrow":
+        case "ArrowRight":
             return "RightArrow"
-        case "UpArrow":
+        case "ArrowUp":
             return "UpArrow"
-        case "DownArrow":
+        case "ArrowDown":
             return "DownArrow"
         case "MetaLeft":
         case "MetaRight":
@@ -99,7 +102,7 @@ export const convertKeyCode = (str: string) : Key => {
 }
 
 export const convertNormalKey = (str: string) : Key => {
-    switch (str as Key) {
+    switch (str.toLowerCase() as Key) {
         case "a":
         case "b":
         case "c":
