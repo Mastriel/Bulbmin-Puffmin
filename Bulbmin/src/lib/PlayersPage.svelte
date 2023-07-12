@@ -41,4 +41,8 @@
     {:else}
         <p>No users connected!</p>
     {/each}
+
+    <h3 class="mt-12 mb-2">Global Keybinds</h3>
+    <p class="text-gray-400 text-sm ml-2">Use Alt+Del to immediately stop the session.</p>
+    <p class="text-gray-400 text-sm ml-2">Use Ctrl+Del to pause button inputs until you press the keybind again</p>
 {/if}

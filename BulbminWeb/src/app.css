@@ -26,6 +26,7 @@ a {
 }
 a:hover {
   color: #8d99ff;
+  text-decoration: underline;
 }
 
 body {

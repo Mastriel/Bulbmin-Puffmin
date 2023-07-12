@@ -115,7 +115,7 @@
                 {/if}
             </div>
         </div>
-        <a target="_blank" href="https://github.com/Mastriel/Bulbmin-Puffmin/releases" class="mt-2">Download the client</a>
+        <a target="_blank" href="https://github.com/Mastriel/Bulbmin-Puffmin/releases" class="mt-3">Download the client</a>
     </main>
 {:else if status === "connecting"}
     <main class="items-center justify-center flex">
@@ -128,7 +128,6 @@
     <main class="items-center justify-center flex">
         <div class="card bg-slate-700 bg-opacity-50 rounded drop-shadow-xl border-slate-600 border">
             <h1>Connected!</h1>
-
         </div>
     </main>
     <div class="flex-row mt-16" style="width: 80vw;">

@@ -8,10 +8,23 @@ import {client} from "./util/connection";
 
 loadSettings()
 
+await globalShortcut.unregister("CmdOrControl+Delete")
+await globalShortcut.unregister("Alt+Delete")
+
+
 await globalShortcut.register("Alt+Delete", () => {
     console.log("Disconnect")
     client.get()?.ws.close(1000, "Closed")
 })
+
+
+await globalShortcut.register("CmdOrControl+Delete", () => {
+    console.log("Pause")
+    let c = client?.get()
+    if (c) c.paused = !c.paused
+})
+
+
 
 const app = new App({
     target: document.getElementById("app")!,

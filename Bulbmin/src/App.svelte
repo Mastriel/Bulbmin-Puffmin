@@ -39,14 +39,28 @@
     const connect = () => {
         if (!$client) $client = new Client()
     }
+
+    const disconnect = () => {
+        $client = undefined
+    }
 </script>
 
 
 <div class="flex w-full h-screen flex-row">
     <div class="w-40">
-        <h2 class="text-center mt-4">Bulbmin</h2>
-        <button class="text-center styled" on:click={connect} style="width:90%; margin-top: 1em">Connect</button>
-        <div class="flex items-center h-3/4">
+        <div class="h-60">
+            <h2 class="text-center mt-4">Bulbmin</h2>
+            {#if !$client}
+                <button class="text-center styled" on:click={connect} style="width:90%; margin-top: 1em">Connect</button>
+            {:else}
+                <button class="text-center styled" on:click={disconnect} style="width:90%; margin-top: 1em">Disconnect</button>
+            {/if}
+            {#if $client?.paused}
+                <h6 class="text-center text-sm text-red-400">Paused</h6>
+            {/if}
+        </div>
+
+        <div class="flex items-center relative">
             <div>
                 {#each pages as iPage}
                     <a class="block pl-4 mt-2 mb-2 option cursor-pointer" on:click={()=>selectPage(iPage.name)} class:selected={$page.name === iPage.name}>{iPage.displayName}</a>

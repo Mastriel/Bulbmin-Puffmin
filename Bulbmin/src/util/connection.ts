@@ -83,6 +83,8 @@ export class Client {
 
             onCustom<ClientboundUserKeyPress>(this.ws, "user_keypress", ["username", "key"], async (message, request) => {
                 let user = this.getUser(request.username)
+
+                if (this.paused) return
                 if (!user?.availableKeys?.includes(<Pressable>request.key)) return
 
                 user?.keysHeld.add(<Pressable>request.key)
@@ -93,6 +95,7 @@ export class Client {
             onCustom<ClientboundUserKeyUnpress>(this.ws, "user_keyunpress", ["username", "key"], async (message, request) => {
                 let user = this.getUser(request.username)!
 
+                if (this.paused) return
                 if (!user.keysHeld.has(<Pressable>request.key)) return
 
                 user.keysHeld.delete(<Pressable>request.key)
@@ -162,6 +165,19 @@ export class Client {
     }
 
     private update = () => client.update(it => it)
+
+    private _paused : boolean = false
+    public get paused() { return this._paused }
+    public set paused(value) {
+        this._paused = value;
+        for (let user of this.connectedUsers) {
+            for (let key of user.keysHeld) {
+                Input.release(key).then(_ => {})
+            }
+            user.keysHeld.clear()
+        }
+        this.update()
+    }
 }
 
 export const client : Fetchable<Client | undefined> = fetchable()
