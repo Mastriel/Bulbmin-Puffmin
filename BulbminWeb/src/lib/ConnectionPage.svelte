@@ -92,7 +92,7 @@
 </script>
 
 {#if status === "idle"}
-    <main class="items-center justify-center flex">
+    <main class="items-center justify-center flex flex-col">
         <div class="card bg-slate-700 bg-opacity-50 rounded drop-shadow-xl border-slate-600 border">
             <h1>Connect</h1>
             <div class="text-left mt-10">
@@ -115,6 +115,7 @@
                 {/if}
             </div>
         </div>
+        <a target="_blank" href="https://github.com/Mastriel/Bulbmin-Puffmin/releases" class="mt-2">Download the client</a>
     </main>
 {:else if status === "connecting"}
     <main class="items-center justify-center flex">
