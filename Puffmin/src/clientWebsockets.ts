@@ -1,6 +1,6 @@
 import {
     ClientConnectToServerRequest,
-    HandshakeResponse, FromClientSetAvailableKeys, FromClientUserKick, ToWebSetAvailableKeys,
+    HandshakeResponse, FromClientSetAvailableKeys, FromClientUserKick, ToWebSetAvailableKeys, FromClientSetPaused,
 } from "communication/src/connections";
 import {createHeartbeatInterval, getType, invalidRequest, onCustom, parseJSONMessage, server} from "./index";
 import {WebSocket, WebSocketServer} from "ws";
@@ -10,7 +10,7 @@ import {WebClient} from "./webWebsockets";
 export type ConnectedClient = ClientConnectToServerRequest & {
     connected: true,
     ws: WebSocket,
-    broadcast: (message: Buffer) => void,
+    broadcast: (message: string) => void,
     webClients: Set<WebClient>,
 }
 
@@ -45,8 +45,8 @@ wss.on("connection", (ws) => {
             ...request,
             connected: true,
             ws: ws,
-            broadcast: (message) => {
-                for (let webClient of client!.webClients) {
+            broadcast: function(message: string) {
+                for (let webClient of this.webClients) {
                     webClient.ws.send(message)
                 }
             },
@@ -69,6 +69,10 @@ wss.on("connection", (ws) => {
             if (!user) return
 
             user.ws.close(1000, `You have been kicked from ${client!.name}.`)
+        })
+
+        onCustom<FromClientSetPaused>(ws, "set_paused", ["paused"], (message, request) => {
+            client!.broadcast(JSON.stringify(request))
         })
 
         onCustom<FromClientSetAvailableKeys>(ws, "set_available_keys", ["username", "keys"], (message, request) => {

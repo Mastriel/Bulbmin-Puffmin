@@ -2,14 +2,11 @@
     import {webClient} from "bulbmin-web/src/connection";
     import {client, type ConnectedUser} from "../util/connection";
     import type {Pressable} from "../util/input";
+    import TagsInput from "./TagsInput.svelte";
+    import {ALL_PRESSABLES} from "../util/input";
+    import Player from "./Player.svelte";
 
-    const setKeysFor = (user: ConnectedUser) => {
-        const keys = (document.getElementById(`keys-for-${user.username}`) as HTMLInputElement)
-            .value
-            .split(",") as Pressable[]
 
-        $client?.setAvailableKeys(user, keys)
-    }
 </script>
 
 <h1 class="mb-10">Players</h1>
@@ -31,13 +28,7 @@
 
     <h3 class="mt-12">Connected Users</h3>
     {#each $client.connectedUsers.filter(it => it.authenticated) as user}
-        <div class="mt-4 mb-1 pl-6 border-t border-slate-600">
-            <p>{user.username}
-                <span class="cursor-pointer" on:click={() => $client.kick(user)}>❌</span>
-            </p>
-            <input type="text" class="bg-slate-700 outline-0" id="keys-for-{user.username}">
-            <span class="cursor-pointer" on:click={() => setKeysFor(user)}>✅</span>
-        </div>
+        <Player user={user}></Player>
     {:else}
         <p>No users connected!</p>
     {/each}

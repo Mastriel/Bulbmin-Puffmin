@@ -3,11 +3,12 @@
 
     import {heartbeatTimeout, onCustom, parseJSONMessage, webClient, type WebClient} from "../connection";
     import type {
-        ToWebSetAvailableKeys,
+        ToWebSetAvailableKeys, ToWebSetPaused,
         WebboundUserAccept,
         WebConnectToServerRequest
     } from "communication/src/connections";
     import {pressedKeys, sendKey, sendKeyUp} from "../input";
+    import {client} from "bulbmin/src/util/connection";
 
     let username : string
     let clientName : string
@@ -60,7 +61,8 @@
                 clientName,
                 clientPassword,
                 authenticated: false,
-                availableKeys: []
+                availableKeys: [],
+                clientPaused: false
             }
 
             status = "connecting"
@@ -79,12 +81,20 @@
                         return it
                     })
                 })
+                onCustom<ToWebSetPaused>(webSocket, "set_paused", ["paused"], (message, request) => {
+                    console.log(`should pause: ${request.paused}`)
+                    webClient.update((it) => {
+                        it.clientPaused = request.paused
+                        return it
+                    })
+                })
             }
             webSocket.addEventListener("message", authenticate)
 
             webSocket.addEventListener("close", (evt) => {
                 declinedConnection = evt.reason
                 status = "idle"
+                $webClient = undefined
                 if (button) button.disabled = false
             })
         })
@@ -128,6 +138,9 @@
     <main class="items-center justify-center flex">
         <div class="card bg-slate-700 bg-opacity-50 rounded drop-shadow-xl border-slate-600 border">
             <h1>Connected!</h1>
+            {#if $webClient.clientPaused}
+                <h3 class="text-red-400">Paused</h3>
+            {/if}
         </div>
     </main>
     <div class="flex-row mt-16" style="width: 80vw;">

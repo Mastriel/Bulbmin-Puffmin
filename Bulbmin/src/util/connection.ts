@@ -4,7 +4,7 @@ import {type Fetchable, fetchable} from "./fetchable";
 import {AppSettings} from "./settings";
 import type {
     ClientboundUserConnect, ClientboundUserDisconnect, ClientboundUserKeyPress, ClientboundUserKeyUnpress,
-    ClientConnectToServerRequest, FromClientSetAvailableKeys, FromClientUserKick,
+    ClientConnectToServerRequest, FromClientSetAvailableKeys, FromClientSetPaused, FromClientUserKick,
     HandshakeResponse, ServerboundUserAccept
 } from "communication/src/connections";
 import {heartbeatTimeout, onCustom, parseJSONMessage} from "bulbmin-web/src/connection";
@@ -176,6 +176,10 @@ export class Client {
             }
             user.keysHeld.clear()
         }
+        this.ws.send(JSON.stringify(<FromClientSetPaused>{
+            type: "set_paused",
+            paused: value
+        }))
         this.update()
     }
 }

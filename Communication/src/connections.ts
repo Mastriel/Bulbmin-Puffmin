@@ -5,6 +5,8 @@ export type WebsocketMessage = {
     type: string
 }
 
+type UserAction = { username: string }
+
 export type HandshakeResponse = WebsocketMessage & {
     type: "handshake_response",
     result: "ok" | "fail"
@@ -15,24 +17,20 @@ export type ClientConnectToServerRequest = WebsocketMessage & {
     name: string,
     password: string
 }
-export type ClientboundUserDisconnect = WebsocketMessage & {
+export type ClientboundUserDisconnect = WebsocketMessage & UserAction & {
     type: "user_disconnect"
-    username: string
 }
 
-export type ClientboundUserConnect = WebsocketMessage & {
+export type ClientboundUserConnect = WebsocketMessage & UserAction & {
     type: "user_connect"
-    username: string
 }
 
-export type ServerboundUserAccept = WebsocketMessage & {
+export type ServerboundUserAccept = WebsocketMessage & UserAction & {
     type: "user_accept"
-    username: string,
 }
 
-export type FromClientUserKick = WebsocketMessage & {
+export type FromClientUserKick = WebsocketMessage & UserAction & {
     type: "user_kick"
-    username: string,
 }
 
 export type WebboundUserAccept = WebsocketMessage & {
@@ -40,9 +38,8 @@ export type WebboundUserAccept = WebsocketMessage & {
     result: "ok" | "fail"
 }
 
-export type FromClientSetAvailableKeys = WebsocketMessage & {
+export type FromClientSetAvailableKeys = WebsocketMessage & UserAction & {
     type: "set_available_keys"
-    username: string,
     keys: string[]
 }
 
@@ -51,12 +48,20 @@ export type ToWebSetAvailableKeys = WebsocketMessage & {
     keys: string[]
 }
 
+export type FromClientSetPaused = WebsocketMessage & {
+    type: "set_paused",
+    paused: boolean,
+}
+
+export type ToWebSetPaused = FromClientSetPaused
+
+
 export type FromWebUserKeyPress = WebsocketMessage & {
     type: "user_keypress"
     key: string
 }
-export type ClientboundUserKeyPress = FromWebUserKeyPress & { username: string }
-export type ClientboundUserKeyUnpress = FromWebUserKeyUnpress & { username: string }
+export type ClientboundUserKeyPress = FromWebUserKeyPress & UserAction
+export type ClientboundUserKeyUnpress = FromWebUserKeyUnpress & UserAction
 
 export type FromWebUserKeyUnpress = WebsocketMessage & {
     type: "user_keyunpress"

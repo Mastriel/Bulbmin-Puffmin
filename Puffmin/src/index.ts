@@ -23,7 +23,6 @@ export const createHeartbeatInterval = (server: WebSocketServer) => {
             if ((ws as any)["isAlive"] === false) return ws.close();
 
             (ws as any)["isAlive"] = false;
-            ws.send("ping")
         });
     }, 3000)
 }

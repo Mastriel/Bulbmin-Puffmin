@@ -46,10 +46,30 @@ button.styled {
   padding-right: 0.4em;
   padding-top: 0.2em;
   padding-bottom: 0.2em;
-  background-color: #2b3a3d;
-  border-color: #384d50;
+  background-color: #476370;
+  border-color: #345c75;
   border-style: solid;
   border-width: 1px;
+  margin: 0.4em;
+}
+
+button.styled:hover {
+  background-color: #476370;
+
+}
+
+
+button.red {
+  @apply rounded;
+  padding-left: 0.4em;
+  padding-right: 0.4em;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  background-color: #f15858;
+  border-color: #d21a1a;
+  border-style: solid;
+  border-width: 1px;
+  color: white;
   margin: 0.4em;
 }
 

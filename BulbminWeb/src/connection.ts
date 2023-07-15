@@ -37,7 +37,8 @@ export type WebClient = {
     clientName: string,
     clientPassword: string,
     authenticated: boolean,
-    availableKeys: string[]
+    availableKeys: string[],
+    clientPaused: boolean
 }
 
 export const heartbeatTimeout = (ws: WebSocket) => {
