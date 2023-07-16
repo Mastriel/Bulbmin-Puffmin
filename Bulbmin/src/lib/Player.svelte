@@ -2,10 +2,11 @@
     import {ALL_PRESSABLES, type Pressable} from "../util/input";
     import {client, type ConnectedUser} from "../util/connection";
     import TagsInput from "./TagsInput.svelte";
+    import {onMount} from "svelte";
 
     export let user : ConnectedUser
 
-    let values : string[]
+    let values : string[] = user.availableKeys
 
     const setKeysFor = (user: ConnectedUser, keys: string[]) => {
         $client?.setAvailableKeys(user, keys as Pressable[])
