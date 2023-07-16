@@ -15,7 +15,7 @@
     <h3>You're not connected, dipshit!</h3>
 {:else}
     <h3>Pending Users</h3>
-    {#each $client.connectedUsers.filter(it => !it.authenticated) as user}
+    {#each $client.connectedUsers.filter(it => !it.authenticated) as user (user.username)}
         <div class="mt-4 mb-1 pl-6 border-t border-slate-600">
             <p>{user.username}
                 <span class="cursor-pointer" on:click={() => $client.accept(user)}>✅</span>
@@ -27,7 +27,7 @@
     {/each}
 
     <h3 class="mt-12">Connected Users</h3>
-    {#each $client.connectedUsers.filter(it => it.authenticated) as user}
+    {#each $client.connectedUsers.filter(it => it.authenticated) as user (user.username)}
         <Player user={user}></Player>
     {:else}
         <p>No users connected!</p>
