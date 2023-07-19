@@ -75,7 +75,7 @@ export const ALL_PRESSABLES : Pressable[] =
         "8", "9", "0", "LeftShift", "RightShift", "LeftCtrl", "RightCtrl",
         "Alt", "Escape", "Tab", "Backspace", "Enter", "LeftArrow", "RightArrow",
         "UpArrow", "DownArrow", "Meta", "Left", "Right", "Middle", "ScrollUp",
-        "ScrollDown", "ScrollLeft", "ScrollRight", "Dot"
+        "ScrollDown", "ScrollLeft", "ScrollRight", "Space", "Dot"
     ]
 
 export namespace Input {
