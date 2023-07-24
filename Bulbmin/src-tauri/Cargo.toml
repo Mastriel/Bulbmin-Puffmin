@@ -10,13 +10,13 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [build-dependencies]
-tauri-build = { version = "1.2", features = [] }
+tauri-build = { version = "1.2.5", features = [] }
 
 [build]
 rustflags = ["-C", "link-arg=-fuse-ld=lld"]
 
 [dependencies]
-tauri = { version = "1.2", features = ["api-all"] }
+tauri = { version = "1.2.5", features = ["api-all"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 inputbot = { git = "https://github.com/obv-mikhail/InputBot", branch = "develop" }
