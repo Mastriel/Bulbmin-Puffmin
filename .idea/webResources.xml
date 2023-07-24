@@ -6,6 +6,7 @@
         <entryData>
           <resourceRoots>
             <path value="file://$PROJECT_DIR$/Bulbmin/public" />
+            <path value="file://$PROJECT_DIR$/BulbminWeb/public" />
           </resourceRoots>
         </entryData>
       </entry>

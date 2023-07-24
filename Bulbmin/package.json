@@ -12,10 +12,7 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^1.2.0",
-    "bulbmin-web": "file:../BulbminWeb",
-    "knex": "^2.4.2",
-    "sqlite3": "^5.1.6",
-    "tauri-plugin-sql-api": "github:tauri-apps/tauri-plugin-sql"
+    "bulbmin-web": "file:../BulbminWeb"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.4.2",
