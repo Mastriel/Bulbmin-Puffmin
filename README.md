@@ -1,5 +1,6 @@
 <div align="center">
-  <h1>Bulbmin + Puffmin</h1>
+  
+  <h1><a href="https://bulbmin.calathea.dev"><img alt="Bulbmin Logo" width="320" src="https://cdn.discordapp.com/attachments/1016181298399826002/1133108141106675712/Bulbmin_Logo.png"></a></h1>
   <p>Bulbmin makes all single-player (PC) games multiplayer! <a href="https://bulbmin.calathea.dev/">Visit the web client.</a></p>
   <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/Mastriel/Bulbmin-Puffmin/total">
   <img alt="License" src="https://img.shields.io/github/license/Mastriel/Bulbmin-Puffmin">
