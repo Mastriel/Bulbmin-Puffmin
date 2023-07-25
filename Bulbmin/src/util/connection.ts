@@ -11,6 +11,7 @@ import {heartbeatTimeout, onCustom, parseJSONMessage} from "bulbmin-web/src/conn
 import type {Pressable} from "./input";
 import {Input} from "./input";
 import {notification} from "@tauri-apps/api";
+import {toast} from "./toast";
 
 
 export type ConnectedUser = {
@@ -49,7 +50,7 @@ export class Client {
 
             onCustom<HandshakeResponse>(this.ws, "handshake_response", ["result"], (message, request) => {
                 this.state = "connected"
-                notification.sendNotification({title: "Bulbmin", body: `Sucessfully connected to ${AppSettings["server-address"]}`})
+                toast.push({body: `Sucessfully connected to Puffmin`})
             })
 
             onCustom<ClientboundUserConnect>(this.ws, "user_connect", ["username"], (message, request) => {
@@ -59,7 +60,7 @@ export class Client {
                     keysHeld: new Set<Pressable>(),
                     authenticated: false
                 })
-                notification.sendNotification({title: "Bulbmin", body: `${request.username} has requested to join.`})
+                toast.push({body: `${request.username} has requested to join.`})
                 console.log("user connect!")
                 this.update()
             })
@@ -75,7 +76,7 @@ export class Client {
                     }
                     if (shouldRelease) await Input.release(it)
                 })
-                notification.sendNotification({title: "Bulbmin", body: `${request.username} has left.`})
+                toast.push({body: `${request.username} has left.`})
 
                 this.connectedUsers = this.connectedUsers.filter(it => it.username != request.username)
                 this.update()
@@ -181,6 +182,10 @@ export class Client {
             paused: value
         }))
         this.update()
+    }
+
+    public close() {
+        this.ws.close(1000, "You disconnected from Puffmin")
     }
 }
 

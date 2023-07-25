@@ -3,6 +3,8 @@
     import {client, type ConnectedUser} from "../util/connection";
     import TagsInput from "./TagsInput.svelte";
     import {onMount} from "svelte";
+    import Card from "./Card.svelte";
+    import {presets} from "../util/presets";
 
     export let user : ConnectedUser
 
@@ -24,14 +26,25 @@
     const copyKeys = () => {
         navigator.clipboard.writeText(values.join(","))
     }
+
+    const transformer = (value: string) : string[] | undefined => {
+        if (value.startsWith("Preset:")) {
+            let name = value.split("Preset:")[1]
+            console.log(name)
+            return $presets.data.find(it => it.name == name)!.keys
+        }
+        return undefined
+    }
+
+    let options = [...ALL_PRESSABLES, ...$presets.data.map(it => "Preset:" + it.name)]
 </script>
 
-<div class="mt-4 mb-1 p-3 border-slate-600 border bg-slate-700 rounded">
+<Card>
     <p class="float-right">{formatKeys(user.keysHeld)}</p>
-    <p class="text-lg">{user.username}</p>
-    <TagsInput options={ALL_PRESSABLES} valuesChange={(keys) => valuesChanged(keys, user)} bind:values={values} className="bg-slate-800 border-slate-600 border rounded outline-0 p-1"></TagsInput>
+    <p class="text-lg mb-1">{user.username}</p>
+    <TagsInput transformer={transformer} options={options} valuesChange={(keys) => valuesChanged(keys, user)} bind:values={values} className="bg-leaf-800 border-leaf-600 border rounded outline-0 p-1"></TagsInput>
     <button class="styled float-left" style="margin-left: 0" on:click={() => setKeysFor(user, [])}>Clear Buttons</button>
     <button class="styled" style="margin-left: 0" on:click={copyKeys}>Copy</button>
 
     <button class="red float-right" style="margin-right: 0" on:click={() => $client.kick(user)}>Kick</button>
-</div>
+</Card>

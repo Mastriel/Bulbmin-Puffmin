@@ -45,4 +45,4 @@ export const heartbeatTimeout = (ws: WebSocket) => {
     ws.close(1000, "Timeout")
 }
 
-export const webClient : Fetchable<WebClient> = fetchable(undefined)
+export const webClient : Fetchable<WebClient | undefined> = fetchable(undefined)

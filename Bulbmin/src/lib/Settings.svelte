@@ -32,9 +32,6 @@
 {/each}
 
 <br><br>
-<button class="bg-green-800 pl-2 pr-2 rounded" on:click={save}>Save</button>
-<span class="text-gray-400">This will restart the application!</span>
-<br>
-<br>
-<button class="bg-red-800 pl-2 pr-2 rounded" on:click={reset}>Reset</button>
-<span class="text-gray-400">This will restart the application!</span>
+<button class="styled" on:click={save}>Save</button>
+<button class="red" on:click={reset}>Reset</button>
+<span class="text-gray-400 text-sm">Saving/resetting will restart the application.</span>

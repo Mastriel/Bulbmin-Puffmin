@@ -8,13 +8,15 @@
 }
 
 :root {
+  /*background: linear-gradient(0deg, #282D28 0%, #263d2000 50%, #282D28 100%), url(noise.svg);*/
+  /*background: linear-gradient(0deg, #282D28 0%, #263d20 50%, #282D28 100%);*/
+  background: linear-gradient(0deg, #282D28 0%, #263d20 100%);
   font-family: Verdana, serif;
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;
 
-  color: #dedddd;
-  background-color: #272a2c;
+  color: #eee;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -41,39 +43,47 @@ h4 {
 
 
 button.styled {
-  @apply rounded;
-  padding-left: 0.4em;
-  padding-right: 0.4em;
-  padding-top: 0.2em;
-  padding-bottom: 0.2em;
-  background-color: #476370;
-  border-color: #345c75;
+  @apply rounded bg-leaf-600 border-leaf-500 drop-shadow;
+  padding: 0.2em 0.4em;
   border-style: solid;
   border-width: 1px;
   margin: 0.4em;
+  transition: background-color 100ms ease-in-out, border-color 100ms ease-in-out;
 }
 
 button.styled:hover {
-  background-color: #476370;
-
+  @apply bg-leaf-500 border-leaf-450 drop-shadow;
 }
 
+input.styled {
+  @apply bg-leaf-600 pl-2 pr-2 rounded pt-1 pb-1 border-leaf-500 border outline-0 drop-shadow;
+  transition: border-color 100ms ease-in-out;
+}
+
+input:hover.styled {
+  @apply border-leaf-400;
+}
+input:focus.styled {
+  @apply border-leaf-400;
+}
 
 button.red {
-  @apply rounded;
+  @apply rounded drop-shadow;
   padding-left: 0.4em;
   padding-right: 0.4em;
   padding-top: 0.2em;
   padding-bottom: 0.2em;
-  background-color: #f15858;
-  border-color: #d21a1a;
+  background-color: #a45050;
+  border-color: #b06b6b;
   border-style: solid;
   border-width: 1px;
   color: white;
   margin: 0.4em;
+  transition: background-color 100ms ease-in-out, border-color 100ms ease-in-out;
 }
 
-button.styled:hover {
-  background-color: #36494d;
+button:hover.red {
+  background-color: #bd6868;
+  border-color: #cb8686;
 
 }

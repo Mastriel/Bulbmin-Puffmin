@@ -3,9 +3,10 @@ import type {SvelteComponent} from "svelte";
 import SettingsComponent from "../lib/Settings.svelte";
 import InvalidPage from "../lib/InvalidPage.svelte";
 import PlayersPage from "../lib/PlayersPage.svelte";
+import PresetsPage from "../lib/PresetsPage.svelte";
 
 
-export type PageName = "settings" | "modes" | "advanced" | "players"
+export type PageName = "settings" | "modes" | "advanced" | "players" | "presets"
 
 export const page = fetchable<{name: PageName, component: typeof SvelteComponent}>({
     name: "settings",
@@ -24,6 +25,8 @@ export const getPageComponentFromName = (name: PageName) : typeof SvelteComponen
             return InvalidPage;
         case "players":
             return PlayersPage;
+        case "presets":
+            return PresetsPage;
         default:
             return InvalidPage;
     }
