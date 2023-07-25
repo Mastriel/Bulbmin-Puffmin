@@ -4,6 +4,7 @@ import {sleep} from "./util/sleep";
 import {loadSettings} from "./util/settings";
 import {globalShortcut} from "@tauri-apps/api";
 import {client} from "./util/connection";
+import {invoke} from "@tauri-apps/api/tauri";
 
 
 loadSettings()
@@ -23,8 +24,6 @@ await globalShortcut.register("CmdOrControl+Delete", () => {
     let c = client?.get()
     if (c) c.paused = !c.paused
 })
-
-
 
 const app = new App({
     target: document.getElementById("app")!,

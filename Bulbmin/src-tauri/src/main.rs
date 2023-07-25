@@ -3,6 +3,7 @@
 
 use std::sync::Mutex;
 use inputbot::{KeybdKey, MouseButton};
+use tauri::{App, Manager, Runtime, Window, Wry};
 
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -11,10 +12,16 @@ fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
+#[tauri::command]
+async fn show_main_window(window: Window<Wry>) {
+    println!("{}", window.label());
+    window.show().unwrap()
+}
+
 fn main() {
 
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, press_button, release_button])
+        .invoke_handler(tauri::generate_handler![greet, press_button, release_button, show_main_window])
         .plugin(tauri_plugin_sql::Builder::default().build())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

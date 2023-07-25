@@ -311,6 +311,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "bulbmin-control-panel"
+version = "0.0.0"
+dependencies = [
+ "inputbot",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-sql",
+]
+
+[[package]]
 name = "bumpalo"
 version = "3.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3873,18 +3885,6 @@ dependencies = [
  "webview2-com",
  "windows 0.39.0",
  "wry",
-]
-
-[[package]]
-name = "tauri-template"
-version = "0.0.0"
-dependencies = [
- "inputbot",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-sql",
 ]
 
 [[package]]

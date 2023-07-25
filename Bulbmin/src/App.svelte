@@ -4,6 +4,15 @@
     import {cli, notification} from "@tauri-apps/api";
     import {toast} from "./util/toast";
     import ToastContainer from "./lib/toasts/ToastContainer.svelte";
+    import {onMount} from "svelte";
+    import {invoke} from "@tauri-apps/api/tauri";
+    import {sleep} from "./util/sleep";
+
+
+    onMount(async () => {
+        await sleep(250)
+        await invoke("show_main_window")
+    })
 
     const selectPage = (name: PageName) => {
         setPageFromName(name)
