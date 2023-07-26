@@ -103,13 +103,13 @@
 
 {#if status === "idle"}
     <main class="items-center justify-center flex flex-col">
-        <div class="card bg-slate-700 bg-opacity-50 rounded drop-shadow-xl border-slate-600 border">
+        <div class="card bg-leaf-700 bg-opacity-50 rounded drop-shadow-xl border-leaf-500 border">
             <h1>Connect</h1>
             <div class="text-left mt-10">
                 <p>Username <span class="text-red-400">*</span></p>
                 <input class="mt-1" type="text" bind:value={username} placeholder="Username">
 
-                <hr class="mt-5 border-slate-600">
+                <hr class="mt-5 border-leaf-500">
 
                 <p class="mt-4">Client Name <span class="text-red-400">*</span></p>
                 <input class="mt-1" type="text" bind:value={clientName} placeholder="Client Name">
@@ -119,8 +119,8 @@
 
                 <button class="mt-16" on:click={connect} bind:this={button}>Connect</button>
                 {#if declinedConnection}
-                    <div class="p-2 bg-red-300 border rounded border-red-200 mt-5">
-                        <p class="text-red-500 text-sm">❌ {declinedConnection}</p>
+                    <div class="p-2 red border rounded mt-5">
+                        <p class="text-white text-sm">⚠️ {declinedConnection}</p>
                     </div>
                 {/if}
             </div>
@@ -129,14 +129,14 @@
     </main>
 {:else if status === "connecting"}
     <main class="items-center justify-center flex">
-        <div class="card bg-slate-700 bg-opacity-50 rounded drop-shadow-xl border-slate-600 border">
+        <div class="card bg-leaf-700 bg-opacity-50 rounded drop-shadow-xl border-leaf-500 border">
             <h1>Connecting...</h1>
             <p>Waiting for {tempWebClient.clientName}</p>
         </div>
     </main>
 {:else}
     <main class="items-center justify-center flex">
-        <div class="card bg-slate-700 bg-opacity-50 rounded drop-shadow-xl border-slate-600 border">
+        <div class="card bg-leaf-700 bg-opacity-50 rounded drop-shadow-xl border-leaf-500 border">
             <h1>Connected!</h1>
             {#if $webClient.clientPaused}
                 <h3 class="text-red-400">Paused</h3>
@@ -145,7 +145,7 @@
     </main>
     <div class="flex-row mt-16" style="width: 80vw;">
         {#each $webClient.availableKeys as key}
-            <div on:mousedown={() => sendKey(key)} on:mouseup={() => sendKeyUp(key)} class="inline-block cursor-pointer key mt-4 bg-slate-700 bg-opacity-50 border border-slate-600 rounded drop-shadow-md" class:font-bold={$pressedKeys[key] === true}>{key}</div>
+            <div on:mousedown={() => sendKey(key)} on:mouseup={() => sendKeyUp(key)} class="inline-block cursor-pointer key mt-4 bg-leaf-700 bg-opacity-50 border border-leaf-500 rounded drop-shadow-md" class:bg-leaf-500={$pressedKeys[key] === true} class:border-leaf-400={$pressedKeys[key] === true}>{key}</div>
         {/each}
     </div>
 {/if}
@@ -155,6 +155,11 @@
         padding: 3em;
         width: 400px;
         backdrop-filter: blur(5px);
+    }
+
+    .red {
+        background-color: #938650;
+        border-color: #d9c471;
     }
 
     .key {

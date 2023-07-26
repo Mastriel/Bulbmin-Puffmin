@@ -10,7 +10,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background: linear-gradient(0deg, #282D28 0%, #263d20 100%);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -20,12 +20,12 @@
 }
 
 a {
+  @apply text-leaf-400;
   font-weight: 500;
-  color: #9ca3ff;
   text-decoration: inherit;
 }
 a:hover {
-  color: #8d99ff;
+  @apply text-leaf-450;
   text-decoration: underline;
 }
 
@@ -53,10 +53,9 @@ h1 {
 
 
 input, button {
-  @apply bg-slate-700 bg-opacity-50 drop-shadow-xl;
+  @apply bg-leaf-700 outline outline-1 outline-leaf-500 drop-shadow-xl;
   padding: 0.5em;
   border-radius: 4px;
-  outline: rgb(71 85 105) solid 1px;
   display: block;
   width: 100%;
   backdrop-filter: blur(5px);
@@ -64,11 +63,11 @@ input, button {
 }
 
 input:focus, button:focus {
-  border-color: rgb(71 85 105);
-  outline-color: rgb(148 163 184);
+  @apply outline-leaf-400;
+
 }
 
-button:hover {
-  background-color: rgb(60, 76, 100);
+button:hover:not(:focus), input:hover:not(:focus) {
+  @apply outline-leaf-450;
 }
 
