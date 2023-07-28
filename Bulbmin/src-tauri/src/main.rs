@@ -3,7 +3,7 @@
 
 use std::sync::Mutex;
 use inputbot::{KeybdKey, MouseButton};
-use tauri::{App, Manager, Runtime, Window, Wry};
+use tauri::{App, Manager, Runtime, Window, WindowEvent, Wry};
 
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -21,6 +21,11 @@ async fn show_main_window(window: Window<Wry>) {
 fn main() {
 
     tauri::Builder::default()
+        .on_window_event(|e| {
+            if let WindowEvent::Resized(_) = e.event() {
+                std::thread::sleep(std::time::Duration::from_nanos(1));
+            }
+        })
         .invoke_handler(tauri::generate_handler![greet, press_button, release_button, show_main_window])
         .plugin(tauri_plugin_sql::Builder::default().build())
         .run(tauri::generate_context!())

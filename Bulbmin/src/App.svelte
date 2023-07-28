@@ -2,7 +2,7 @@
     import {page, type PageName, setPageFromName} from "./util/page";
     import {client, Client, connectionError} from "./util/connection";
     import {cli, notification} from "@tauri-apps/api";
-    import {toast} from "./util/toast";
+    import {toaster} from "./util/toast";
     import ToastContainer from "./lib/toasts/ToastContainer.svelte";
     import {onMount} from "svelte";
     import {invoke} from "@tauri-apps/api/tauri";
@@ -47,7 +47,7 @@
     ]
 
     connectionError.subscribe((it) => {
-        if (it) toast.push({body: it})
+        if (it) toaster.push({body: it})
         console.log("wah!")
     })
 
@@ -76,7 +76,7 @@
                 <h6 class="text-center text-sm text-red-400">Paused</h6>
             {/if}
         </div>
-        <div class="flex items-center relative">
+        <div class="flex items-center absolute">
             <div>
                 {#each pages as iPage}
                     <a class="block pl-4 mt-2 mb-2 option cursor-pointer" on:click={()=>selectPage(iPage.name)} class:selected={$page.name === iPage.name}>{iPage.displayName}</a>

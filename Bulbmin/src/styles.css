@@ -11,7 +11,7 @@
   /*background: linear-gradient(0deg, #282D28 0%, #263d2000 50%, #282D28 100%), url(noise.svg);*/
   /*background: linear-gradient(0deg, #282D28 0%, #263d20 50%, #282D28 100%);*/
   background: linear-gradient(0deg, #282D28 0%, #263d20 100%);
-  font-family: Verdana, serif;
+  font-family: Inter, system-ui, serif;
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;

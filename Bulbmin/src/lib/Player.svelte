@@ -5,6 +5,7 @@
     import {onMount} from "svelte";
     import Card from "./Card.svelte";
     import {presets} from "../util/presets";
+    import {toaster} from "../util/toast";
 
     export let user : ConnectedUser
 
@@ -25,6 +26,8 @@
 
     const copyKeys = () => {
         navigator.clipboard.writeText(values.join(","))
+        toaster.push({body: `Copied keys for ${user.username}`})
+
     }
 
     const transformer = (value: string) : string[] | undefined => {
@@ -42,7 +45,7 @@
 <Card>
     <p class="float-right">{formatKeys(user.keysHeld)}</p>
     <p class="text-lg mb-1">{user.username}</p>
-    <TagsInput transformer={transformer} options={options} valuesChange={(keys) => valuesChanged(keys, user)} bind:values={values} className="bg-leaf-800 border-leaf-600 border rounded outline-0 p-1"></TagsInput>
+    <TagsInput transformer={transformer} options={options} valuesChange={(keys) => valuesChanged(keys, user)} bind:values={values} className="bg-leaf-800 border-leaf-600 border rounded outline-0 p-1.5"></TagsInput>
     <button class="styled float-left" style="margin-left: 0" on:click={() => setKeysFor(user, [])}>Clear Buttons</button>
     <button class="styled" style="margin-left: 0" on:click={copyKeys}>Copy</button>
 

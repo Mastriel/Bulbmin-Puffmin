@@ -31,6 +31,6 @@
 <button class="styled" on:click={createPreset}>Create Preset</button>
 
 
-{#each $presets.data as preset}
+{#each $presets.data.toReversed() as preset (preset.id)}
     <Preset id={preset.id}/>
 {/each}

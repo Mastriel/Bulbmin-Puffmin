@@ -99,11 +99,15 @@
             })
         })
     }
+
+    const checkEnter = (ev: KeyboardEvent) => {
+        if (ev.code == "Enter") connect()
+    }
 </script>
 
 {#if status === "idle"}
     <main class="items-center justify-center flex flex-col">
-        <div class="card bg-leaf-700 bg-opacity-50 rounded drop-shadow-xl border-leaf-500 border">
+        <div class="card bg-leaf-700 bg-opacity-50 rounded drop-shadow-xl border-leaf-500 border" on:keypress={checkEnter}>
             <h1>Connect</h1>
             <div class="text-left mt-10">
                 <p>Username <span class="text-red-400">*</span></p>
@@ -131,7 +135,7 @@
     <main class="items-center justify-center flex">
         <div class="card bg-leaf-700 bg-opacity-50 rounded drop-shadow-xl border-leaf-500 border">
             <h1>Connecting...</h1>
-            <p>Waiting for {tempWebClient.clientName}</p>
+            <p class="mt-3">Waiting for {tempWebClient.clientName}</p>
         </div>
     </main>
 {:else}
@@ -145,12 +149,20 @@
     </main>
     <div class="flex-row mt-16" style="width: 80vw;">
         {#each $webClient.availableKeys as key}
-            <div on:mousedown={() => sendKey(key)} on:mouseup={() => sendKeyUp(key)} class="inline-block cursor-pointer key mt-4 bg-leaf-700 bg-opacity-50 border border-leaf-500 rounded drop-shadow-md" class:bg-leaf-500={$pressedKeys[key] === true} class:border-leaf-400={$pressedKeys[key] === true}>{key}</div>
+            <div on:mousedown={() => sendKey(key)}
+                 on:mouseup={() => sendKeyUp(key)}
+                 class="inline-block cursor-pointer key mt-4 bg-leaf-700 bg-opacity-50 border border-leaf-500 rounded drop-shadow-md"
+                 class:active={$pressedKeys[key] === true}>{key}</div>
         {/each}
     </div>
 {/if}
 
 <style>
+
+    div.active {
+        @apply bg-leaf-500 border-leaf-400;
+    }
+
     .card {
         padding: 3em;
         width: 400px;

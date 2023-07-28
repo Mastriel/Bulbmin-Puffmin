@@ -8,7 +8,7 @@ export type Toast = {
 }
 
 
-export class ToastStore implements Readable<Toast[]> {
+export class Toaster implements Readable<Toast[]> {
 
     private readonly reaction : Writable<Toast[]> = writable([])
 
@@ -51,4 +51,4 @@ export class ToastStore implements Readable<Toast[]> {
 
 export const TOAST_LIVE_TIME = 8000
 
-export const toast = new ToastStore()
+export const toaster = new Toaster()

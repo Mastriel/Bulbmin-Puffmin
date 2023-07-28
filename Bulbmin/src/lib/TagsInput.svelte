@@ -10,6 +10,8 @@
 
     export let transformer : (value: string) => (string[] | undefined) = () => undefined
 
+    export let immutable : boolean = false
+
     let valuesListVisible = false
 
     let inputElement : HTMLInputElement
@@ -18,8 +20,9 @@
 
 
     const onOptionClick = (option: string) => {
-        inputElement.value = option
-        inputElement.blur()
+        if (values.includes(option)) return
+        insertValue(option)
+        inputElement.value = ""
     }
 
     const makeListInvisible = () => {
@@ -61,6 +64,7 @@
     }
 
     const removeValue = (value: string) => {
+        if (immutable) return
         values = values.filter(it => it != value)
         valuesChange(values)
     }
@@ -69,21 +73,28 @@
 
 <div class={className}>
     <div class="flex justify-between w-full">
-        <div class="flex justify-between items-end">
-            <div></div>
-            <div class="h-6">
-                <input class="pl-2 pr-2 bg-transparent outline-0 w-max border-0 pt-0 pb-0" on:keypress={inputKeyPress} on:input={onInput} bind:this={inputElement} on:focus={() => valuesListVisible = true} on:focusout={() => makeListInvisible()}>
-                <button class="relative pl-2 pr-2 bg-leaf-600 border rounded border-leaf-500" style="translate: 0 -1px" on:click={() => insertValue()}>Add</button>
-            </div>
-        </div>
-        <div class="w-1 ml-1 border-r border-r-leaf-500"></div>
-
-        <div class="ml-1 flex-1 flex flex-row gap-y-2 flex-wrap">
+        <div class="flex-1 flex flex-row gap-y-2 flex-wrap">
             {#each values as value}
-                <button tabindex="-1" class="rounded pl-2 pr-2 ml-1 mr-1 bg-leaf-600 outline-1 outline outline-leaf-500" on:click={() => removeValue(value)}>
+                <button tabindex="-1" class="rounded pl-2 pr-2 mr-2 bg-leaf-600 outline-1 outline outline-leaf-500"
+                        class:cursor-not-allowed={immutable}
+                        on:click={() => removeValue(value)}>
                     <span>{value}</span>
+                    {#if !immutable}
+                        <img src="x-button.svg" alt="Remove key" height="12" width="12" class="inline-block pl-1 -translate-y-0.5">
+                    {/if}
                 </button>
             {/each}
+            {#if !immutable}
+                <input class="pl-1 pr-2 bg-transparent outline-0 border-t-leaf-500 w-full border-0 pb-0"
+                       class:border-t={values.length > 0}
+                       class:pt-1={values.length > 0}
+                       placeholder="Enter keys..."
+                       on:keypress={inputKeyPress}
+                       on:input={onInput}
+                       bind:this={inputElement}
+                       on:focus={() => valuesListVisible = true}
+                       on:focusout={() => makeListInvisible()}>
+            {/if}
         </div>
     </div>
     <div class="absolute list pb-4" class:opacity-0={!valuesListVisible} class:pointer-events-none={!valuesListVisible} style="z-index: 10">

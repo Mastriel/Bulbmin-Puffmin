@@ -7,6 +7,7 @@ type PresetData = {
     name: string,
     keys: Pressable[],
     id: string,
+    removable: boolean
 }
 
 type PresetsData = {
@@ -25,7 +26,7 @@ export class Presets {
 
     public createPreset(name: string) : string {
         let id = uuid()
-        this._data.push({name, id, keys: []})
+        this._data.push({name, id, keys: [], removable: true})
         this.update()
         return id
     }
@@ -65,32 +66,38 @@ const defaultPresets = new Presets([
     {
         name: "everything-danger",
         keys: ALL_PRESSABLES,
-        id: uuid()
+        id: uuid(),
+        removable: false
     },
     {
         name: "wasd-movement",
         keys: ["w", "a", "s", "d"],
-        id: uuid()
+        id: uuid(),
+        removable: false
     },
     {
         name: "arrow-keys",
         keys: ["UpArrow", "LeftArrow", "DownArrow", "RightArrow"],
-        id: uuid()
+        id: uuid(),
+        removable: false
     },
     {
         name: "mouse-buttons",
         keys: ["Left", "Right", "Middle"],
-        id: uuid()
+        id: uuid(),
+        removable: false
     },
     {
         name: "numbers",
         keys: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
-        id: uuid()
+        id: uuid(),
+        removable: false
     },
     {
         name: "letters",
         keys: ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"],
-        id: uuid()
+        id: uuid(),
+        removable: false
     },
 ])
 

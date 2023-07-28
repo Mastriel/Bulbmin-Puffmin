@@ -9,9 +9,9 @@ import {invoke} from "@tauri-apps/api/tauri";
 
 loadSettings()
 
+
 await globalShortcut.unregister("CmdOrControl+Delete")
 await globalShortcut.unregister("Alt+Delete")
-
 
 await globalShortcut.register("Alt+Delete", () => {
     console.log("Disconnect")
