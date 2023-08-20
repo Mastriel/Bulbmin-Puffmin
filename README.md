@@ -12,9 +12,9 @@
 - Killswitch global hotkeys to stop or pause all keyboard inputs.
 - A free-to-use server, so you don't have to port-forward and share your own IP address.
 - Performant, should not cause issues with network speed or traffic, nor RAM or CPU.
-- Low latency, less than 70ms.
+- Low latency.
 - Only the host needs to download an application. Others can use the web client to connect.
-- Web client works on mobile!
+- Web client works on mobile! (WIP it works, you can only press buttons though, you can't hold down)
 
 ## What this is not
 - Bulbmin does not provide a way to stream your desktop. You must use another platform like Discord to share your screen with participants.
@@ -22,7 +22,7 @@
 ## Why is it named Bulbmin and Puffmin?
 - In Pikmin 2, a hidden type of Pikmin is buried in the caves of the game, named Bulbmin. These are revealed to be parasitic Pikmin that have taken
 control of a Bulborb as their host. Much like the web clients are 'parasites' on the host computer.
-- Puffmin is named for a very similar reason.  
+- Puffmin is named for a very similar reason, after another form of parasitic Pikmin.
 
 ## Puffmin
 Puffmin is the server that acts as a mediator between the web client and the Bulbmin desktop client. As a user, you don't have to worry about this.
