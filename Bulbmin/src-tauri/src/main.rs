@@ -2,8 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use rdev::{Button, EventType, Key};
-use std::sync::{Arc, Mutex, MutexGuard};
-use tauri::{App, Manager, Runtime, State, Window, WindowEvent, Wry};
+use tauri::{Window, Wry};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -64,7 +63,7 @@ fn get_event_type(
 
 fn alter_key_state(key: &str, state: PressDirection) -> Result<(), String> {
     let resolved_key = get_key(key);
-    if (resolved_key.is_ok()) {
+    if resolved_key.is_ok() {
         println!("Touch {state:?}! {:?}", resolved_key);
         rdev::simulate(&get_event_type(Keyish::Key, state)(key)).unwrap();
         return Ok(());
