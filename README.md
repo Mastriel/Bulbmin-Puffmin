@@ -14,7 +14,7 @@
 - Performant, should not cause issues with network speed or traffic, nor RAM or CPU.
 - Low latency.
 - Only the host needs to download an application. Others can use the web client to connect.
-- Web client works on mobile! (WIP it works, you can only press buttons though, you can't hold down)
+- Web client works on mobile!
 
 ## What this is not
 - Bulbmin does not provide a way to stream your desktop. You must use another platform like Discord to share your screen with participants.
