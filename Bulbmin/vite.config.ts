@@ -1,6 +1,5 @@
 import {defineConfig, UserConfig} from "vite";
 import {svelte, vitePreprocess} from "@sveltejs/vite-plugin-svelte";
-import sveltePreprocess from "svelte-preprocess";
 import {nodePolyfills} from "vite-plugin-node-polyfills";
 import {resolve} from "path";
 
@@ -12,11 +11,7 @@ const mobile =
 export default defineConfig(async () : Promise<UserConfig> => ({
     plugins: [
         svelte({
-            preprocess: [
-                sveltePreprocess({
-                    typescript: true,
-                })
-            ],
+            
         }),
         nodePolyfills({
             protocolImports: true,

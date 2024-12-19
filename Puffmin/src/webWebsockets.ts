@@ -12,10 +12,11 @@ import {
     FromWebUserKeyUnpress,
     ClientboundUserKeyUnpress
 } from "communication/src/connections";
-import {createHeartbeatInterval, getType, invalidRequest, onCustom, parseJSONMessage} from "./index";
+import {getType, invalidRequest, onCustom, parseJSONMessage} from "./index";
 import {WebSocketServer, WebSocket} from "ws";
 import {ConnectedClient, connectedClients} from "./clientWebsockets";
 import https from "https"
+import {createHeartbeatInterval} from "./heartbeat";
 
 
 
@@ -33,7 +34,7 @@ export let wss = new WebSocketServer({noServer: true})
 wss.on("connection", (webWs: WebSocket) => {
 
     let webClient : WebClient | undefined = undefined;
-    (webWs as any)["isAlive"] = true
+    webWs.isAlive = true
     webWs.once("message", (data: Buffer) => {
         if (getType(data) != "handshake_request_web") {
             webWs.close(1000, "Invalid first request.")
@@ -139,7 +140,7 @@ wss.on("connection", (webWs: WebSocket) => {
 
     webWs.on("message", (msg) => {
         if (String(msg) != "pong") return
-        (webWs as any)["isAlive"] = true
+        webWs.isAlive = true
     })
 
     webWs.on("close", () => {

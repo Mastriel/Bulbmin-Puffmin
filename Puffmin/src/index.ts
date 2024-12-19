@@ -7,26 +7,15 @@ import {WebSocketServer, WebSocket} from "ws";
 
 import * as url from "url";
 import * as httpServer from "http";
+import {wss, wss as clientWss} from "./clientWebsockets"
+import {wss as webWss} from "./webWebsockets"
 
 
 export const server = httpServer.createServer()
 
 
-export const createHeartbeatInterval = (server: WebSocketServer) => {
-    return setInterval(() => {
-        server.clients.forEach((ws: WebSocket) => {
-            if ((ws as any)["noPing"] === true) return;
-            if ((ws as any)["isAlive"] === false) return ws.close();
 
-            (ws as any)["isAlive"] = false;
-        });
-    }, 3000)
-}
 
-import {wss, wss as clientWss} from "./clientWebsockets"
-import {wss as webWss} from "./webWebsockets"
-import * as path from "path";
-import * as http from "node:http";
 
 server.on('upgrade', function upgrade(request, socket, head) {
     // TODO make it not do that

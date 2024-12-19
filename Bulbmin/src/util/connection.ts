@@ -34,7 +34,7 @@ export class Client {
 
         this.state = "connecting"
         this.ws.addEventListener("open", () => {
-            let timeout = setTimeout(() => heartbeatTimeout(ws), 5000)
+            let timeout = setTimeout(() => heartbeatTimeout(ws), 8000)
 
             this.ws.send(JSON.stringify(<ClientConnectToServerRequest>{
                 type: "handshake_request",
@@ -44,7 +44,7 @@ export class Client {
             this.ws.addEventListener("message", (evt) => {
                 if (evt.data != "ping") return
                 clearTimeout(timeout)
-                timeout = setTimeout(() => heartbeatTimeout(ws), 5000)
+                timeout = setTimeout(() => heartbeatTimeout(ws), 8000)
                 this.ws.send("pong")
             })
 
@@ -120,6 +120,8 @@ export class Client {
 
         this.ws.addEventListener("close", (msg) => {
             client.set(undefined)
+
+            console.log("Connection closed: ", msg)
 
             connectionError.set("Connection closed: " + msg.reason)
         })

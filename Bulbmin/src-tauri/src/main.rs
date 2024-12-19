@@ -54,13 +54,13 @@ fn alter_key_state(key: &str, state: PressDirection) -> Result<(), String> {
     let resolved_key = get_key(key);
     if (resolved_key.is_ok()) {
         println!("Touchup! {:?}", resolved_key);
-        get_event_type(Keyish::Key, state)(key);
+        rdev::simulate(&get_event_type(Keyish::Key, state)(key)).unwrap();
         return Ok(());
     }
 
     match get_mouse_button(key) {
         Ok(_button) => {
-            get_event_type(Keyish::Button, state)(key);
+            rdev::simulate(&get_event_type(Keyish::Button, state)(key)).unwrap();
             Ok(())
         },
         Err(_err) => Err(key.to_string())

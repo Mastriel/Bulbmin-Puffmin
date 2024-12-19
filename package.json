@@ -7,6 +7,6 @@
     "BulbminWeb"
   ],
   "dependencies": {
-    "tsc": "^2.0.4"
+    "tsx": "^4.19.2"
   }
 }

@@ -9,8 +9,8 @@ LABEL fly_launch_runtime="NodeJS"
 # NodeJS app lives here
 WORKDIR /app
 
-# Set production environment
-ENV NODE_ENV=production
+## Set production environment
+#ENV NODE_ENV=development
 
 
 # Throw-away build stage to reduce size of final image
@@ -20,13 +20,15 @@ FROM base as build
 RUN apt-get update -qq && \
     apt-get install -y python-is-python3 pkg-config build-essential 
 
-# Install node modules
-COPY --link package.json package-lock.json ./
-RUN npm install
 
 # Copy application code
 COPY --link . .
 
+
+# Install node modules
+#COPY --link package.json package-lock.json ./
+RUN npm install
+RUN npm install --workspace=Puffmin
 
 
 # Final stage for app image

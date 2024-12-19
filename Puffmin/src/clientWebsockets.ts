@@ -2,9 +2,10 @@ import {
     ClientConnectToServerRequest,
     HandshakeResponse, FromClientSetAvailableKeys, FromClientUserKick, ToWebSetAvailableKeys, FromClientSetPaused,
 } from "communication/src/connections";
-import {createHeartbeatInterval, getType, invalidRequest, onCustom, parseJSONMessage, server} from "./index";
+import {getType, invalidRequest, onCustom, parseJSONMessage, server} from "./index";
 import {WebSocket, WebSocketServer} from "ws";
 import {WebClient} from "./webWebsockets";
+import {createHeartbeatInterval} from "./heartbeat";
 
 
 export type ConnectedClient = ClientConnectToServerRequest & {
@@ -19,9 +20,9 @@ export let wss = new WebSocketServer({ noServer: true })
 
 export const connectedClients : Set<ConnectedClient> = new Set<ConnectedClient>()
 
-wss.on("connection", (ws) => {
+wss.on("connection", (ws: WebSocket) => {
     let client : ConnectedClient | undefined = undefined;
-    (ws as any)["isAlive"] = true
+    ws.isAlive = true
 
     ws.once("message", (data: Buffer) => {
         if (getType(data) != "handshake_request") {
@@ -90,12 +91,12 @@ wss.on("connection", (ws) => {
     ws.on("message", (msg) => {
         console.log(String(msg))
         if (String(msg) != "pong") return
-        (ws as any)["isAlive"] = true
+        ws.isAlive = true
     })
 
     ws.on("message", (msg) => {
         if (String(msg) != "noping") return
-        (ws as any)["noPing"] = true
+        ws.noPing = true
     })
 
     ws.on("close", () => {
