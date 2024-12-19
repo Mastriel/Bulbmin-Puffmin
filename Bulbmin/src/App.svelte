@@ -6,6 +6,7 @@
     import {onMount} from "svelte";
     import {invoke} from "@tauri-apps/api/tauri";
     import {sleep} from "./util/sleep";
+    import { version } from "../../package.json"
 
 
     onMount(async () => {
@@ -88,6 +89,10 @@
     <main class="h-full w-full p-4 overflow-x-hidden scroll mr-1">
         <svelte:component this={$page.component}/>
     </main>
+</div>
+
+<div class="absolute text-leaf-450 bottom-1 left-2 font-[monospace] text-sm">
+    v{version}
 </div>
 
 

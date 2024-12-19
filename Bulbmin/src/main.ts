@@ -10,16 +10,16 @@ import {invoke} from "@tauri-apps/api/tauri";
 loadSettings()
 
 
-await globalShortcut.unregister("CmdOrControl+Delete")
-await globalShortcut.unregister("Alt+Delete")
+await globalShortcut.unregister("CmdOrControl+F12")
+await globalShortcut.unregister("Alt+F12")
 
-await globalShortcut.register("Alt+Delete", () => {
+await globalShortcut.register("Alt+F12", () => {
     console.log("Disconnect")
-    client.get()?.ws.close(1000, "Closed")
+    client.get()?.ws.close(1000, "Closed forcefully")
 })
 
 
-await globalShortcut.register("CmdOrControl+Delete", () => {
+await globalShortcut.register("CmdOrControl+F12", () => {
     console.log("Pause")
     let c = client?.get()
     if (c) c.paused = !c.paused

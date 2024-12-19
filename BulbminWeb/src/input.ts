@@ -1,7 +1,7 @@
 import type {Key, Pressable} from "bulbmin/src/util/input";
 import {webClient} from "./connection";
 import type {FromWebUserKeyPress, FromWebUserKeyUnpress} from "communication/src/connections";
-import {fetchable} from "./fetchable";
+import {type Fetchable, fetchable} from "./fetchable";
 
 
 export const pressedKeys = fetchable<PressedKeyMask>({})

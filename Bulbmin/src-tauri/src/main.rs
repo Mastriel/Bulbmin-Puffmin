@@ -42,8 +42,10 @@ fn get_event_type(keyish: Keyish, press_direction: PressDirection) -> Box<dyn Fn
         }
         Keyish::Key => {
             if matches!(press_direction, PressDirection::Press) {
+                println!("touch press");
                 |key| { EventType::KeyPress(get_key(key).unwrap()) }
             } else {
+                println!("touch release");
                 |key| { EventType::KeyRelease(get_key(key).unwrap()) }
             }
         }
@@ -53,7 +55,7 @@ fn get_event_type(keyish: Keyish, press_direction: PressDirection) -> Box<dyn Fn
 fn alter_key_state(key: &str, state: PressDirection) -> Result<(), String> {
     let resolved_key = get_key(key);
     if (resolved_key.is_ok()) {
-        println!("Touchup! {:?}", resolved_key);
+        println!("Touch {state:?}! {:?}", resolved_key);
         rdev::simulate(&get_event_type(Keyish::Key, state)(key)).unwrap();
         return Ok(());
     }
@@ -68,16 +70,17 @@ fn alter_key_state(key: &str, state: PressDirection) -> Result<(), String> {
 }
 
 enum Keyish { Button, Key }
+#[derive(Debug)]
 enum PressDirection { Press, Release }
 
 #[tauri::command]
 fn release_button(button: &str) -> Result<(), String> {
-    alter_key_state(button, PressDirection::Press)
+    alter_key_state(button, PressDirection::Release)
 }
 
 #[tauri::command]
 fn press_button(button: &str) -> Result<(), String> {
-    alter_key_state(button, PressDirection::Release)
+    alter_key_state(button, PressDirection::Press)
 }
 
 fn get_mouse_button(string: &str) -> Result<Button, &str> {

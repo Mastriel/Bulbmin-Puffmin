@@ -9,7 +9,7 @@
     } from "communication/src/connections";
     import {pressedKeys, sendKey, sendKeyUp} from "../input";
     import {client} from "bulbmin/src/util/connection";
-    import type {Key} from "bulbmin/src/util/input";
+    import {ALL_PRESSABLES, type Key} from "bulbmin/src/util/input";
 
     let username : string
     let clientName : string
@@ -108,8 +108,8 @@
 </script>
 
 {#if status === "idle"}
-    <main class="items-center justify-center flex flex-col">
-        <div class="card bg-leaf-700 bg-opacity-50 rounded drop-shadow-xl border-leaf-500 border">
+    <main class="h-full items-center justify-center flex flex-col">
+        <div class="card bg-leaf-700 bg-opacity-50 rounded drop-shadow-xl border-leaf-500 border w-[350px] md:w-[400px]">
             <h1>Connect</h1>
             <form class="text-left mt-10" on:submit|preventDefault={connect}>
                 <p>Username <span class="text-red-400">*</span></p>
@@ -134,25 +134,27 @@
         <a target="_blank" href="https://github.com/Mastriel/Bulbmin-Puffmin/releases" class="mt-3">Download the client</a>
     </main>
 {:else if status === "connecting"}
-    <main class="items-center justify-center flex">
-        <div class="card bg-leaf-700 bg-opacity-50 rounded drop-shadow-xl border-leaf-500 border">
+    <main class="mt-4 justify-center flex">
+        <div class="card-sm p-1 bg-leaf-700 bg-opacity-50 rounded drop-shadow-xl border-leaf-500 border">
             <h1>Connecting...</h1>
             <p class="mt-3">Waiting for {tempWebClient.clientName}</p>
         </div>
     </main>
 {:else}
-    <main class="items-center justify-center flex">
-        <div class="card bg-leaf-700 bg-opacity-50 rounded drop-shadow-xl border-leaf-500 border">
+    <main class="mt-4 justify-center flex">
+        <div class="card-sm bg-leaf-700 bg-opacity-50 rounded drop-shadow-xl border-leaf-500 border">
             <h1>Connected!</h1>
             {#if $webClient.clientPaused}
                 <h3 class="text-red-400">Paused</h3>
             {/if}
         </div>
     </main>
-    <div class="flex-row mt-16" style="width: 80vw;">
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 mt-16 select-none">
         {#each $webClient.availableKeys as key}
             <div on:mousedown={() => sendKey(key)}
                  on:mouseup={() => sendKeyUp(key)}
+                 on:touchstart|preventDefault={() => sendKey(key)}
+                 on:touchend|preventDefault={() => sendKeyUp(key)}
                  role="button"
                  tabindex="0"
                  class="inline-block cursor-pointer key mt-4 bg-leaf-700 bg-opacity-50 border border-leaf-500 rounded drop-shadow-md"
@@ -169,6 +171,11 @@
 
     .card {
         padding: 3em;
+        backdrop-filter: blur(5px);
+    }
+
+    .card-sm {
+        padding: 1em;
         width: 400px;
         backdrop-filter: blur(5px);
     }
