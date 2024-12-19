@@ -9,6 +9,7 @@
     } from "communication/src/connections";
     import {pressedKeys, sendKey, sendKeyUp} from "../input";
     import {client} from "bulbmin/src/util/connection";
+    import type {Key} from "bulbmin/src/util/input";
 
     let username : string
     let clientName : string
@@ -34,8 +35,13 @@
 
         let timeout = setTimeout(heartbeatTimeout, 5000)
 
-        webSocket.addEventListener("error", (evt) => {
+        webSocket.addEventListener("error", () => {
             declinedConnection = "An error occurred connecting to the WebSocket. Is the server up?"
+            status = "idle"
+            if (button) button.disabled = false
+        })
+
+        webSocket.addEventListener("close", () => {
             status = "idle"
             if (button) button.disabled = false
         })
@@ -77,7 +83,7 @@
 
                 onCustom<ToWebSetAvailableKeys>(webSocket, "set_available_keys", ["keys"], (message, request) => {
                     webClient.update((it) => {
-                        it.availableKeys = request.keys
+                        it.availableKeys = request.keys as Key[]
                         return it
                     })
                 })
@@ -99,17 +105,13 @@
             })
         })
     }
-
-    const checkEnter = (ev: KeyboardEvent) => {
-        if (ev.code == "Enter") connect()
-    }
 </script>
 
 {#if status === "idle"}
     <main class="items-center justify-center flex flex-col">
-        <div class="card bg-leaf-700 bg-opacity-50 rounded drop-shadow-xl border-leaf-500 border" on:keypress={checkEnter}>
+        <div class="card bg-leaf-700 bg-opacity-50 rounded drop-shadow-xl border-leaf-500 border">
             <h1>Connect</h1>
-            <div class="text-left mt-10">
+            <form class="text-left mt-10" on:submit|preventDefault={connect}>
                 <p>Username <span class="text-red-400">*</span></p>
                 <input class="mt-1" type="text" bind:value={username} placeholder="Username">
 
@@ -127,7 +129,7 @@
                         <p class="text-white text-sm">⚠️ {declinedConnection}</p>
                     </div>
                 {/if}
-            </div>
+            </form>
         </div>
         <a target="_blank" href="https://github.com/Mastriel/Bulbmin-Puffmin/releases" class="mt-3">Download the client</a>
     </main>
@@ -151,6 +153,8 @@
         {#each $webClient.availableKeys as key}
             <div on:mousedown={() => sendKey(key)}
                  on:mouseup={() => sendKeyUp(key)}
+                 role="button"
+                 tabindex="0"
                  class="inline-block cursor-pointer key mt-4 bg-leaf-700 bg-opacity-50 border border-leaf-500 rounded drop-shadow-md"
                  class:active={$pressedKeys[key] === true}>{key}</div>
         {/each}

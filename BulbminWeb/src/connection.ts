@@ -2,6 +2,7 @@ import type {WebsocketMessage} from "communication/src/connections";
 import {type Writable, writable} from "svelte/store";
 import type {Fetchable} from "./fetchable";
 import {fetchable} from "./fetchable";
+import type {Key} from "bulbmin/src/util/input";
 
 export const getType = (message: Buffer) : string | undefined => {
     return parseJSONMessage<WebsocketMessage>(message)?.type
@@ -37,7 +38,7 @@ export type WebClient = {
     clientName: string,
     clientPassword: string,
     authenticated: boolean,
-    availableKeys: string[],
+    availableKeys: Key[],
     clientPaused: boolean
 }
 

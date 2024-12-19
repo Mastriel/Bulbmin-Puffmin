@@ -5,5 +5,8 @@
     "Puffmin",
     "Communication",
     "BulbminWeb"
-  ]
+  ],
+  "dependencies": {
+    "tsc": "^2.0.4"
+  }
 }

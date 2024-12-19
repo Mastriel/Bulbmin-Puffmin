@@ -5,12 +5,11 @@ import {
 } from "communication/src/connections";
 import {WebSocketServer, WebSocket} from "ws";
 
-import https from "https";
 import * as url from "url";
-import * as fs from "fs";
+import * as httpServer from "http";
 
 
-export const server = http.createServer()
+export const server = httpServer.createServer()
 
 
 export const createHeartbeatInterval = (server: WebSocketServer) => {
