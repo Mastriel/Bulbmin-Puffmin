@@ -52,6 +52,7 @@ server.on('upgrade', function upgrade(request, socket, head) {
 
 server.listen(443)
 
+console.log("Server started")
 
 export const invalidRequest = (reason?: string) => {
     return "Handshake failed: " + (reason ?? "Bad first message.")

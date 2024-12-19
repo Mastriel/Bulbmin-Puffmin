@@ -1,9 +1,9 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::sync::Mutex;
-use inputbot::{KeybdKey, MouseButton};
-use tauri::{App, Manager, Runtime, Window, WindowEvent, Wry};
+use std::sync::{Arc, Mutex, MutexGuard};
+use rdev::{Button, EventType, Key};
+use tauri::{App, Manager, Runtime, State, Window, WindowEvent, Wry};
 
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -19,120 +19,129 @@ async fn show_main_window(window: Window<Wry>) {
 }
 
 fn main() {
-
     tauri::Builder::default()
         .on_window_event(|e| {
             if let WindowEvent::Resized(_) = e.event() {
                 std::thread::sleep(std::time::Duration::from_nanos(1));
             }
         })
-        .invoke_handler(tauri::generate_handler![greet, press_button, release_button, show_main_window])
-        .plugin(tauri_plugin_sql::Builder::default().build())
+        .invoke_handler(tauri::generate_handler![greet, press_button, show_main_window, release_button])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
 
 
-#[tauri::command]
-fn press_button(button: &str) -> Result<(), String> {
-    let key = get_key(button);
-    match key {
-        Ok(key) => {
-            println!("Touchdown! {:?}", key);
-            key.press()
-        },
-        Err(_err) => {
-            match get_mouse_button(button) {
-                Ok(button) => button.press(),
-                Err(_err) => return Err(String::from("no valid key or mouse button found: ") + button)
+fn get_event_type(keyish: Keyish, press_direction: PressDirection) -> Box<dyn Fn(&str) -> EventType> {
+    Box::new(match keyish { 
+        Keyish::Button => {
+            if matches!(press_direction, PressDirection::Press) {
+                |button| { EventType::ButtonPress(get_mouse_button(button).unwrap()) }
+            } else {
+                |button| { EventType::ButtonRelease(get_mouse_button(button).unwrap()) }
             }
         }
-    }
-    return Ok(())
+        Keyish::Key => {
+            if matches!(press_direction, PressDirection::Press) {
+                |key| { EventType::KeyPress(get_key(key).unwrap()) }
+            } else {
+                |key| { EventType::KeyRelease(get_key(key).unwrap()) }
+            }
+        }
+    })
 }
+
+fn alter_key_state(key: &str, state: PressDirection) -> Result<(), String> {
+    let resolved_key = get_key(key);
+    if (resolved_key.is_ok()) {
+        println!("Touchup! {:?}", resolved_key);
+        get_event_type(Keyish::Key, state)(key);
+        return Ok(());
+    }
+
+    match get_mouse_button(key) {
+        Ok(button) => {
+            get_event_type(Keyish::Button, state)(key);
+            Ok(())
+        },
+        Err(_err) => Err(key.to_string())
+    }
+}
+
+enum Keyish { Button, Key }
+enum PressDirection { Press, Release }
 
 #[tauri::command]
 fn release_button(button: &str) -> Result<(), String> {
-    let key = get_key(button);
-    match key {
-        Ok(key) => {
-            println!("Touchup! {:?}", key);
-            key.release()
-        },
-        Err(_err) => {
-            match get_mouse_button(button) {
-                Ok(button) => {
-                    button.release()
-                },
-                Err(_err) => return Err(String::from("no valid key or mouse button found: ") + button)
-            }
-        }
-    }
-    return Ok(())
+    alter_key_state(button, PressDirection::Press)
 }
 
-fn get_mouse_button(string: &str) -> Result<MouseButton, &str> {
-    return match string {
-        "Left" => Ok(MouseButton::LeftButton),
-        "Right" => Ok(MouseButton::RightButton),
-        "Middle" => Ok(MouseButton::MiddleButton),
+#[tauri::command]
+fn press_button(button: &str) -> Result<(), String> {
+    alter_key_state(button, PressDirection::Release)
+}
+
+fn get_mouse_button(string: &str) -> Result<Button, &str> {
+    match string {
+        "Left" => Ok(Button::Left),
+        "Right" => Ok(Button::Right),
+        "Middle" => Ok(Button::Middle),
         _ => Err("invalid mouse button")
     }
 }
-fn get_key(string: &str) -> Result<KeybdKey, &str> {
-    return match string {
-        "a" => Ok(KeybdKey::AKey),
-        "b" => Ok(KeybdKey::BKey),
-        "c" => Ok(KeybdKey::CKey),
-        "d" => Ok(KeybdKey::DKey),
-        "e" => Ok(KeybdKey::EKey),
-        "f" => Ok(KeybdKey::FKey),
-        "g" => Ok(KeybdKey::GKey),
-        "h" => Ok(KeybdKey::HKey),
-        "i" => Ok(KeybdKey::IKey),
-        "j" => Ok(KeybdKey::JKey),
-        "k" => Ok(KeybdKey::KKey),
-        "l" => Ok(KeybdKey::LKey),
-        "m" => Ok(KeybdKey::MKey),
-        "n" => Ok(KeybdKey::NKey),
-        "o" => Ok(KeybdKey::OKey),
-        "p" => Ok(KeybdKey::PKey),
-        "q" => Ok(KeybdKey::QKey),
-        "r" => Ok(KeybdKey::RKey),
-        "s" => Ok(KeybdKey::SKey),
-        "t" => Ok(KeybdKey::TKey),
-        "u" => Ok(KeybdKey::UKey),
-        "v" => Ok(KeybdKey::VKey),
-        "w" => Ok(KeybdKey::WKey),
-        "x" => Ok(KeybdKey::XKey),
-        "y" => Ok(KeybdKey::YKey),
-        "z" => Ok(KeybdKey::ZKey),
-        "1" => Ok(KeybdKey::Numrow1Key),
-        "2" => Ok(KeybdKey::Numrow2Key),
-        "3" => Ok(KeybdKey::Numrow3Key),
-        "4" => Ok(KeybdKey::Numrow4Key),
-        "5" => Ok(KeybdKey::Numrow5Key),
-        "6" => Ok(KeybdKey::Numrow6Key),
-        "7" => Ok(KeybdKey::Numrow7Key),
-        "8" => Ok(KeybdKey::Numrow8Key),
-        "9" => Ok(KeybdKey::Numrow9Key),
-        "0" => Ok(KeybdKey::Numrow0Key),
-        "LeftShift" => Ok(KeybdKey::LShiftKey),
-        "RightShift" => Ok(KeybdKey::RShiftKey),
-        "LeftCtrl" => Ok(KeybdKey::LControlKey),
-        "RightCtrl" => Ok(KeybdKey::RControlKey),
-        "Alt" => Ok(KeybdKey::LAltKey),
-        "Escape" => Ok(KeybdKey::EscapeKey),
-        "Tab" => Ok(KeybdKey::TabKey),
-        "Backspace" => Ok(KeybdKey::BackspaceKey),
-        "Enter" => Ok(KeybdKey::EnterKey),
-        "LeftArrow" => Ok(KeybdKey::LeftKey),
-        "RightArrow" => Ok(KeybdKey::RightKey),
-        "UpArrow" => Ok(KeybdKey::UpKey),
-        "DownArrow" => Ok(KeybdKey::DownKey),
-        "Meta" => Ok(KeybdKey::LSuper),
-        "Space" => Ok(KeybdKey::SpaceKey),
-        "Dot" => Ok(KeybdKey::PeriodKey),
+fn get_key(string: &str) -> Result<Key, &str> {
+    match string {
+        "a" => Ok(Key::KeyA),
+        "b" => Ok(Key::KeyB),
+        "c" => Ok(Key::KeyC),
+        "d" => Ok(Key::KeyD),
+        "e" => Ok(Key::KeyE),
+        "f" => Ok(Key::KeyF),
+        "g" => Ok(Key::KeyG),
+        "h" => Ok(Key::KeyH),
+        "i" => Ok(Key::KeyI),
+        "j" => Ok(Key::KeyJ),
+        "k" => Ok(Key::KeyK),
+        "l" => Ok(Key::KeyL),
+        "m" => Ok(Key::KeyM),
+        "n" => Ok(Key::KeyN),
+        "o" => Ok(Key::KeyO),
+        "p" => Ok(Key::KeyP),
+        "q" => Ok(Key::KeyQ),
+        "r" => Ok(Key::KeyR),
+        "s" => Ok(Key::KeyS),
+        "t" => Ok(Key::KeyT),
+        "u" => Ok(Key::KeyU),
+        "v" => Ok(Key::KeyV),
+        "w" => Ok(Key::KeyW),
+        "x" => Ok(Key::KeyX),
+        "y" => Ok(Key::KeyY),
+        "z" => Ok(Key::KeyZ),
+        "1" => Ok(Key::Num1),
+        "2" => Ok(Key::Num2),
+        "3" => Ok(Key::Num3),
+        "4" => Ok(Key::Num4),
+        "5" => Ok(Key::Num5),
+        "6" => Ok(Key::Num6),
+        "7" => Ok(Key::Num7),
+        "8" => Ok(Key::Num8),
+        "9" => Ok(Key::Num9),
+        "0" => Ok(Key::Num0),
+        "LeftShift" => Ok(Key::ShiftLeft),
+        "RightShift" => Ok(Key::ShiftRight),
+        "LeftCtrl" => Ok(Key::ControlLeft),
+        "RightCtrl" => Ok(Key::ControlRight),
+        "Alt" => Ok(Key::Alt),
+        "Escape" => Ok(Key::Escape),
+        "Tab" => Ok(Key::Tab),
+        "Backspace" => Ok(Key::Backspace),
+        "Enter" => Ok(Key::Return),
+        "LeftArrow" => Ok(Key::LeftArrow),
+        "RightArrow" => Ok(Key::RightArrow),
+        "UpArrow" => Ok(Key::UpArrow),
+        "DownArrow" => Ok(Key::DownArrow),
+        "Meta" => Ok(Key::MetaLeft),
+        "Space" => Ok(Key::Space),
+        "Dot" => Ok(Key::Dot),
         _ => Err("invalid key")
     }
 }

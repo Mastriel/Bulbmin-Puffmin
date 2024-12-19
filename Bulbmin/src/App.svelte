@@ -1,7 +1,6 @@
 <script lang="ts">
     import {page, type PageName, setPageFromName} from "./util/page";
     import {client, Client, connectionError} from "./util/connection";
-    import {cli, notification} from "@tauri-apps/api";
     import {toaster} from "./util/toast";
     import ToastContainer from "./lib/toasts/ToastContainer.svelte";
     import {onMount} from "svelte";

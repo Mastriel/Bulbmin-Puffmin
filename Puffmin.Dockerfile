@@ -7,6 +7,6 @@ COPY . .
 
 RUN npm install
 
-EXPOSE 8081
+EXPOSE 443
 
 CMD [ "npm", "run", "dev", "--workspace=Puffmin" ]

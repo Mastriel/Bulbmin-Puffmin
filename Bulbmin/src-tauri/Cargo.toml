@@ -19,14 +19,10 @@ rustflags = ["-C", "link-arg=-fuse-ld=lld"]
 tauri = { version = "1.4.0", features = ["api-all"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-inputbot = { git = "https://github.com/obv-mikhail/InputBot", branch = "develop" }
+time = "0.3.35"
+rdev = "0.5.3"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
 # DO NOT REMOVE!!
 custom-protocol = ["tauri/custom-protocol"]
-
-[dependencies.tauri-plugin-sql]
-git = "https://github.com/tauri-apps/plugins-workspace"
-branch = "dev"
-features = ["sqlite"] # or "postgres", or "mysql"
