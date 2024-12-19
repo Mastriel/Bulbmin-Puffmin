@@ -32,7 +32,7 @@ fn main() {
 
 
 fn get_event_type(keyish: Keyish, press_direction: PressDirection) -> Box<dyn Fn(&str) -> EventType> {
-    Box::new(match keyish { 
+    Box::new(match keyish {
         Keyish::Button => {
             if matches!(press_direction, PressDirection::Press) {
                 |button| { EventType::ButtonPress(get_mouse_button(button).unwrap()) }
@@ -59,7 +59,7 @@ fn alter_key_state(key: &str, state: PressDirection) -> Result<(), String> {
     }
 
     match get_mouse_button(key) {
-        Ok(button) => {
+        Ok(_button) => {
             get_event_type(Keyish::Button, state)(key);
             Ok(())
         },
