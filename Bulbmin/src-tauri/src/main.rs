@@ -1,10 +1,9 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::sync::{Arc, Mutex, MutexGuard};
 use rdev::{Button, EventType, Key};
+use std::sync::{Arc, Mutex, MutexGuard};
 use tauri::{App, Manager, Runtime, State, Window, WindowEvent, Wry};
-
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -20,33 +19,44 @@ async fn show_main_window(window: Window<Wry>) {
 
 fn main() {
     tauri::Builder::default()
-        .on_window_event(|e| {
-            if let WindowEvent::Resized(_) = e.event() {
-                std::thread::sleep(std::time::Duration::from_nanos(1));
-            }
-        })
-        .invoke_handler(tauri::generate_handler![greet, press_button, show_main_window, release_button])
+        .plugin(tauri_plugin_http::init())
+        .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_os::init())
+        .plugin(tauri_plugin_notification::init())
+        .plugin(tauri_plugin_clipboard_manager::init())
+        .plugin(tauri_plugin_process::init())
+        .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_global_shortcut::Builder::new().build())
+        .plugin(tauri_plugin_dialog::init())
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            press_button,
+            show_main_window,
+            release_button
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
 
-
-fn get_event_type(keyish: Keyish, press_direction: PressDirection) -> Box<dyn Fn(&str) -> EventType> {
+fn get_event_type(
+    keyish: Keyish,
+    press_direction: PressDirection,
+) -> Box<dyn Fn(&str) -> EventType> {
     Box::new(match keyish {
         Keyish::Button => {
             if matches!(press_direction, PressDirection::Press) {
-                |button| { EventType::ButtonPress(get_mouse_button(button).unwrap()) }
+                |button| EventType::ButtonPress(get_mouse_button(button).unwrap())
             } else {
-                |button| { EventType::ButtonRelease(get_mouse_button(button).unwrap()) }
+                |button| EventType::ButtonRelease(get_mouse_button(button).unwrap())
             }
         }
         Keyish::Key => {
             if matches!(press_direction, PressDirection::Press) {
                 println!("touch press");
-                |key| { EventType::KeyPress(get_key(key).unwrap()) }
+                |key| EventType::KeyPress(get_key(key).unwrap())
             } else {
                 println!("touch release");
-                |key| { EventType::KeyRelease(get_key(key).unwrap()) }
+                |key| EventType::KeyRelease(get_key(key).unwrap())
             }
         }
     })
@@ -64,14 +74,20 @@ fn alter_key_state(key: &str, state: PressDirection) -> Result<(), String> {
         Ok(_button) => {
             rdev::simulate(&get_event_type(Keyish::Button, state)(key)).unwrap();
             Ok(())
-        },
-        Err(_err) => Err(key.to_string())
+        }
+        Err(_err) => Err(key.to_string()),
     }
 }
 
-enum Keyish { Button, Key }
+enum Keyish {
+    Button,
+    Key,
+}
 #[derive(Debug)]
-enum PressDirection { Press, Release }
+enum PressDirection {
+    Press,
+    Release,
+}
 
 #[tauri::command]
 fn release_button(button: &str) -> Result<(), String> {
@@ -88,7 +104,7 @@ fn get_mouse_button(string: &str) -> Result<Button, &str> {
         "Left" => Ok(Button::Left),
         "Right" => Ok(Button::Right),
         "Middle" => Ok(Button::Middle),
-        _ => Err("invalid mouse button")
+        _ => Err("invalid mouse button"),
     }
 }
 fn get_key(string: &str) -> Result<Key, &str> {
@@ -145,6 +161,6 @@ fn get_key(string: &str) -> Result<Key, &str> {
         "Meta" => Ok(Key::MetaLeft),
         "Space" => Ok(Key::Space),
         "Dot" => Ok(Key::Dot),
-        _ => Err("invalid key")
+        _ => Err("invalid key"),
     }
 }

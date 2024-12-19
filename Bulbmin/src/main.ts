@@ -2,9 +2,9 @@ import "./styles.css";
 import App from "./App.svelte";
 import {sleep} from "./util/sleep";
 import {loadSettings} from "./util/settings";
-import {globalShortcut} from "@tauri-apps/api";
 import {client} from "./util/connection";
-import {invoke} from "@tauri-apps/api/tauri";
+import {invoke} from "@tauri-apps/api/core";
+import * as globalShortcut from "@tauri-apps/plugin-global-shortcut"
 
 
 loadSettings()

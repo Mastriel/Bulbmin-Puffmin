@@ -4,7 +4,7 @@
     import {toaster} from "./util/toast";
     import ToastContainer from "./lib/toasts/ToastContainer.svelte";
     import {onMount} from "svelte";
-    import {invoke} from "@tauri-apps/api/tauri";
+    import {invoke} from "@tauri-apps/api/core";
     import {sleep} from "./util/sleep";
     import { version } from "../../package.json"
 

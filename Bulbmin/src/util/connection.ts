@@ -10,7 +10,6 @@ import type {
 import {heartbeatTimeout, onCustom, parseJSONMessage} from "bulbmin-web/src/connection";
 import type {Pressable} from "./input";
 import {Input} from "./input";
-import {notification} from "@tauri-apps/api";
 import {toaster} from "./toast";
 
 
