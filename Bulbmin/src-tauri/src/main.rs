@@ -10,12 +10,6 @@ fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
-#[tauri::command]
-async fn show_main_window(window: Window<Wry>) {
-    println!("{}", window.label());
-    window.show().unwrap()
-}
-
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_http::init())
@@ -30,7 +24,6 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             greet,
             press_button,
-            show_main_window,
             release_button
         ])
         .run(tauri::generate_context!())

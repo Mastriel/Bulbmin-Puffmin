@@ -3,16 +3,7 @@
     import {client, Client, connectionError} from "./util/connection";
     import {toaster} from "./util/toast";
     import ToastContainer from "./lib/toasts/ToastContainer.svelte";
-    import {onMount} from "svelte";
-    import {invoke} from "@tauri-apps/api/core";
-    import {sleep} from "./util/sleep";
     import { version } from "../../package.json"
-
-
-    onMount(async () => {
-        await sleep(250)
-        await invoke("show_main_window")
-    })
 
     const selectPage = (name: PageName) => {
         setPageFromName(name)
