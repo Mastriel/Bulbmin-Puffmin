@@ -10,10 +10,7 @@ import * as url from "url";
 import * as fs from "fs";
 
 
-export const server = https.createServer({
-    key: fs.readFileSync("./dist/privkey.pem"),
-    cert: fs.readFileSync("./dist/fullchain.pem")
-})
+export const server = http.createServer()
 
 
 export const createHeartbeatInterval = (server: WebSocketServer) => {
@@ -30,6 +27,7 @@ export const createHeartbeatInterval = (server: WebSocketServer) => {
 import {wss, wss as clientWss} from "./clientWebsockets"
 import {wss as webWss} from "./webWebsockets"
 import * as path from "path";
+import * as http from "node:http";
 
 server.on('upgrade', function upgrade(request, socket, head) {
     // TODO make it not do that
@@ -50,7 +48,7 @@ server.on('upgrade', function upgrade(request, socket, head) {
     }
 });
 
-server.listen(443)
+server.listen(8080)
 
 console.log("Server started")
 

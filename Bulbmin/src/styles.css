@@ -25,6 +25,14 @@
   -webkit-text-size-adjust: 100%;
 }
 
+html {
+  overscroll-behavior: none;
+}
+
+body {
+  overscroll-behavior: initial;
+}
+
 h1 {
   font-size: 2em;
 }
