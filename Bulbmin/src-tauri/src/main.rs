@@ -153,6 +153,8 @@ fn get_key(string: &str) -> Result<Key, &str> {
         "Meta" => Ok(Key::MetaLeft),
         "Space" => Ok(Key::Space),
         "Dot" => Ok(Key::Dot),
+        "Pause" => Ok(Key::Pause),
+        "Insert" => Ok(Key::Insert),
         _ => Err("invalid key"),
     }
 }

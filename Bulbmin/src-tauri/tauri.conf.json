@@ -18,7 +18,7 @@
   },
   "productName": "Bulbmin Control Panel",
   "mainBinaryName": "Bulbmin Control Panel",
-  "version": "0.3.2",
+  "version": "../../package.json",
   "identifier": "dev.mastriel",
   "plugins": {},
   "app": {
