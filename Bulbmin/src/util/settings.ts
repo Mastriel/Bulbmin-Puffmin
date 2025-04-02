@@ -18,7 +18,7 @@ export const AVAILABLE_SETTINGS : Setting[] = [
         type: "string",
         name: "Server Address (only use servers you trust!)",
         id: "server-address",
-        defaultValue: "wss://puffmin.fly.dev/web/connect",
+        defaultValue: "wss://puffmin.fly.dev/client/connect",
         validator: input => []
     },
     {
