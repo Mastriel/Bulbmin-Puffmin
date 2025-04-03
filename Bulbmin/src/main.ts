@@ -8,16 +8,31 @@ import * as globalShortcut from "@tauri-apps/plugin-global-shortcut"
 loadSettings()
 
 
-await globalShortcut.unregister("CmdOrControl+F12")
-await globalShortcut.unregister("Alt+F12")
+const tryUnregister = (shortcut: string) => {
+    globalShortcut.unregister(shortcut)
+        .catch(() => {
+            console.log("Failed to unregister " + shortcut)
+        })
+}
 
-await globalShortcut.register("Alt+F12", () => {
+const tryRegister = (shortcut: string, callback: () => void) => {
+    globalShortcut.register(shortcut, callback)
+        .catch(() => {
+            console.log("Failed to register " + shortcut)
+        })
+}
+
+tryUnregister("CmdOrControl+F12")
+tryUnregister("Alt+F12")
+
+
+tryRegister("Alt+F12", () => {
     console.log("Disconnect")
     client.get()?.ws.close(1000, "Closed forcefully")
 })
 
 
-await globalShortcut.register("CmdOrControl+F12", () => {
+tryRegister("CmdOrControl+F12", () => {
     console.log("Pause")
     let c = client?.get()
     if (c) c.paused = !c.paused
