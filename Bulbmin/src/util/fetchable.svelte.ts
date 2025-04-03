@@ -8,7 +8,7 @@ import {writable} from "svelte/store";
  *
  * @see Writable
  */
-export interface Fetchable<T> extends Writable<T> {
+export interface FetchableSvelte<T> extends Writable<T> {
     get: () => T | undefined
 }
 
@@ -16,9 +16,9 @@ export interface Fetchable<T> extends Writable<T> {
  * Creates a new Fetchable.
  *
  * @param value The initial value of this Fetchable
- * @see Fetchable
+ * @see FetchableSvelte
  */
-export function fetchable<T>(value: T | undefined = undefined): Fetchable<T> {
+export function fetchable<T>(value: T | undefined = undefined): FetchableSvelte<T> {
     let store = writable<T>(value)
 
     let fetchable = {
@@ -46,9 +46,9 @@ export function fetchable<T>(value: T | undefined = undefined): Fetchable<T> {
  *
  * @param name The name of the localStorage value.
  * @param value The initial value of this Fetchable
- * @see Fetchable
+ * @see FetchableSvelte
  */
-export function storedFetchable<T>(name: string, value: T | undefined = undefined): Fetchable<T> {
+export function storedFetchable<T>(name: string, value: T | undefined = undefined): FetchableSvelte<T> {
     let item = localStorage.getItem(name)
     let store = item ? fetchable<T>(JSON.parse(item)) : fetchable<T>(value)
     store.subscribe((it) => {
@@ -67,16 +67,16 @@ export function storedFetchable<T>(name: string, value: T | undefined = undefine
  * @param value The initial value of this Fetchable
  * @param serializer Serializes T into TData
  * @param deserializer Deserializes TData into T
- * @see Fetchable
+ * @see FetchableSvelte
  */
 export function serializingStoredFetchable<T, TData extends object>(
     name: string,
     value: T | undefined = undefined,
     serializer: (value: T) => TData,
     deserializer: (value: TData) => T
-): Fetchable<T> {
+): FetchableSvelte<T> {
     let item = localStorage.getItem(name)
-    let store : Fetchable<T>
+    let store : FetchableSvelte<T>
     try {
         store = item ? fetchable<T>(deserializer(JSON.parse(item) as TData)) : fetchable<T>(value)
     } catch (e) {
@@ -99,3 +99,50 @@ export function serializingStoredFetchable<T, TData extends object>(
 
     return store
 }
+
+export type StatePtr<T> = { $: T };
+
+class StatePtrProxy<T> implements StatePtr<T> {
+    private value: T = $state(undefined!);
+
+    constructor(value: T) {
+        this.value = value;
+    }
+
+    get $() {
+        return this.value;
+    }
+
+    set $(value: T) {
+        this.value = value;
+    }
+}
+
+
+export function usePersist<T, SerialT>(key: string, initialValue: T, serialize: (value: T) => SerialT, deserialize: (value: SerialT) => T): StatePtr<T> {
+    let storedValue = localStorage.getItem(key);
+    let state = storedValue !== null
+        ? new StatePtrProxy<T>(deserialize(JSON.parse(storedValue)))
+        : new StatePtrProxy<T>(initialValue);
+
+    if ($effect.tracking()) {
+        $effect(() => {
+            localStorage.setItem(key, JSON.stringify(serialize(state.$)));
+        })
+    } else {
+        $effect.root(() => {
+            $effect(() => {
+                console.log("State changed")
+                localStorage.setItem(key, JSON.stringify(serialize(state.$)));
+            })
+        })
+    }
+
+    return state
+}
+
+export function useStatePtr<T>(initialValue: T): StatePtr<T> {
+    return new StatePtrProxy<T>(initialValue);
+}
+
+export const notNull = <T>(value: T | null | undefined): T => value!;

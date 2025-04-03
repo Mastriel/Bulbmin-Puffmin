@@ -1,22 +1,28 @@
 <script lang="ts">
 
-    export let options : string[]
 
-    export let values : string[] = []
+    let {
+        options,
+        values = $bindable([]),
+        className,
+        valuesChange,
+        transformer = (value: string) => undefined,
+        immutable = false
+    } : {
+        options: string[],
+        values: string[],
+        className: string,
+        valuesChange: (values: string[]) => void,
+        transformer?: (value: string) => (string[] | undefined),
+        immutable?: boolean
+    } = $props()
 
-    export let className : string
 
-    export let valuesChange : (values: string[]) => void
+    let valuesListVisible = $state(false)
 
-    export let transformer : (value: string) => (string[] | undefined) = () => undefined
+    let inputElement : HTMLInputElement = $state(undefined!)
 
-    export let immutable : boolean = false
-
-    let valuesListVisible = false
-
-    let inputElement : HTMLInputElement
-
-    let shownOptions = options
+    let shownOptions = $state(options)
 
 
     const onOptionClick = (option: string) => {
@@ -30,8 +36,7 @@
             valuesListVisible = false
         }, 150)
     }
-    const onInput = (ev: InputEvent) => {
-        console.log(ev.data)
+    const onInput = (ev: Event) => {
         shownOptions = options.filter((it) => it.toLowerCase().includes(inputElement.value.toLowerCase()))
     }
     const inputKeyPress = (ev: KeyboardEvent) => {
@@ -58,7 +63,6 @@
         }
 
         values.push(correctedValue)
-        values = values
         shownOptions = options
         valuesChange(values)
     }
@@ -77,7 +81,7 @@
             {#each values as value}
                 <button tabindex="-1" class="rounded pl-2 pr-2 mr-2 bg-leaf-600 outline-1 outline outline-leaf-500"
                         class:cursor-not-allowed={immutable}
-                        on:click={() => removeValue(value)}>
+                        onclick={() => removeValue(value)}>
                     <span>{value}</span>
                     {#if !immutable}
                         <img src="x-button.svg" alt="Remove key" height="12" width="12" class="inline-block pl-1 -translate-y-0.5">
@@ -85,22 +89,23 @@
                 </button>
             {/each}
             {#if !immutable}
+                <!--suppress HtmlDeprecatedAttribute -->
                 <input class="pl-1 pr-2 bg-transparent outline-0 border-t-leaf-500 w-full border-0 pb-0"
                        class:border-t={values.length > 0}
                        class:pt-1={values.length > 0}
                        placeholder="Enter keys..."
-                       on:keypress={inputKeyPress}
-                       on:input={onInput}
+                       onkeypress={inputKeyPress}
+                       oninput={onInput}
                        bind:this={inputElement}
-                       on:focus={() => valuesListVisible = true}
-                       on:focusout={() => makeListInvisible()}>
+                       onfocus={() => valuesListVisible = true}
+                       onfocusout={() => makeListInvisible()}>
             {/if}
         </div>
     </div>
     <div class="absolute list pb-4" class:opacity-0={!valuesListVisible} class:pointer-events-none={!valuesListVisible} style="z-index: 10">
         <div class="bg-leaf-700 translate-y-1 -translate-x-1 rounded max-h-32 overflow-y-scroll scroll border-leaf-500 border" style="width: 18.5rem;">
             {#each shownOptions as option, i}
-                <div class="list-element cursor-pointer" on:click={() => onOptionClick(option)}>
+                <div class="list-element cursor-pointer" onclick={() => onOptionClick(option)}>
                     <p class="pl-2">{option}</p>
                     {#if i !== shownOptions.length-1}
                         <hr class="border-leaf-500">

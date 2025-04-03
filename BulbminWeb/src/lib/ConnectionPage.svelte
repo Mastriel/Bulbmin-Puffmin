@@ -1,39 +1,38 @@
 <script lang="ts">
 
 
-    import {heartbeatTimeout, onCustom, parseJSONMessage, webClient, type WebClient} from "../connection";
+    import {onCustom, parseJSONMessage, webClient, type WebClient} from "../connection";
     import type {
         ToWebSetAvailableKeys, ToWebSetPaused,
         WebboundUserAccept,
         WebConnectToServerRequest
     } from "communication/src/connections";
     import {pressedKeys, sendKey, sendKeyUp} from "../input";
-    import {client} from "bulbmin/src/util/connection";
+    import {client} from "Bulbmin/src/util/connection.svelte";
     import {ALL_PRESSABLES, type Key} from "bulbmin/src/util/input";
 
-    let username : string
-    let clientName : string
-    let clientPassword : string
+    let username : string = $state()
+    let clientName : string = $state()
+    let clientPassword : string = $state()
 
-    let button : HTMLButtonElement
+    let button : HTMLButtonElement = $state()
 
-    let status : "idle" | "connecting" | "connected" = "idle"
+    let status : "idle" | "connecting" | "connected" = $state("idle")
 
     let url = import.meta.env.DEV ? import.meta.env.VITE_WEBSOCKET_SERVER_DEV : import.meta.env.VITE_WEBSOCKET_SERVER
     console.log()
 
-    let declinedConnection : string = undefined
+    let declinedConnection : string = $state(undefined)
 
 
 
-    let tempWebClient : WebClient = undefined
+    let tempWebClient : WebClient = $state(undefined)
 
-    const connect = () => {
+    const connect = (ev: SubmitEvent | undefined) => {
+        ev?.preventDefault()
         if (button) button.disabled = true
 
         let webSocket = new WebSocket(url)
-
-        let timeout = setTimeout(heartbeatTimeout, 5000)
 
         webSocket.addEventListener("error", () => {
             declinedConnection = "An error occurred connecting to the WebSocket. Is the server up?"
@@ -44,13 +43,6 @@
         webSocket.addEventListener("close", () => {
             status = "idle"
             if (button) button.disabled = false
-        })
-
-        webSocket.addEventListener("message", (evt) => {
-            if (evt.data != "ping") return
-            clearTimeout(timeout)
-            timeout = setTimeout(heartbeatTimeout, 5000)
-            webSocket.send("pong")
         })
 
         webSocket.addEventListener("open", (evt) => {
@@ -111,7 +103,7 @@
     <main class="h-full items-center justify-center flex flex-col">
         <div class="card bg-leaf-700 bg-opacity-50 rounded drop-shadow-xl border-leaf-500 border w-[350px] md:w-[400px]">
             <h1>Connect</h1>
-            <form class="text-left mt-10" on:submit|preventDefault={connect}>
+            <form class="text-left mt-10" onsubmit={connect}>
                 <p>Username <span class="text-red-400">*</span></p>
                 <input class="mt-1" type="text" bind:value={username} placeholder="Username">
 
@@ -123,7 +115,7 @@
                 <p class="mt-5">Client Password <span class="text-red-400">*</span></p>
                 <input class="mt-1" type="password" bind:value={clientPassword} placeholder="Client Password">
 
-                <button class="mt-16" on:click={connect} bind:this={button}>Connect</button>
+                <button class="mt-16" onclick={() => connect(undefined)} bind:this={button}>Connect</button>
                 {#if declinedConnection}
                     <div class="p-2 red border rounded mt-5">
                         <p class="text-white text-sm">⚠️ {declinedConnection}</p>
@@ -151,10 +143,10 @@
     </main>
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 mt-16 select-none">
         {#each $webClient.availableKeys as key}
-            <div on:mousedown={() => sendKey(key)}
-                 on:mouseup={() => sendKeyUp(key)}
-                 on:touchstart|preventDefault={() => sendKey(key)}
-                 on:touchend|preventDefault={() => sendKeyUp(key)}
+            <div onmousedown={() => sendKey(key)}
+                 onmouseup={() => sendKeyUp(key)}
+                 ontouchstart={(ev) => {ev.preventDefault(); sendKey(key)}}
+                 ontouchend={(ev) => {ev.preventDefault(); sendKeyUp(key)}}
                  role="button"
                  tabindex="0"
                  class="inline-block cursor-pointer key mt-4 bg-leaf-700 bg-opacity-50 border border-leaf-500 rounded drop-shadow-md"

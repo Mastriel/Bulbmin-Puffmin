@@ -5,7 +5,6 @@ import {
 import {getType, invalidRequest, onCustom, parseJSONMessage, server} from "./index";
 import {WebSocket, WebSocketServer} from "ws";
 import {WebClient} from "./webWebsockets";
-import {createHeartbeatInterval} from "./heartbeat";
 
 
 export type ConnectedClient = ClientConnectToServerRequest & {
@@ -94,11 +93,6 @@ wss.on("connection", (ws: WebSocket) => {
         ws.isAlive = true
     })
 
-    ws.on("message", (msg) => {
-        if (String(msg) != "noping") return
-        ws.noPing = true
-    })
-
     ws.on("close", () => {
         if (!client) return
         connectedClients.delete(client)
@@ -107,8 +101,3 @@ wss.on("connection", (ws: WebSocket) => {
         })
     })
 })
-
-
-const heartbeatInterval = createHeartbeatInterval(wss)
-
-wss.on('close', () => clearInterval(heartbeatInterval))

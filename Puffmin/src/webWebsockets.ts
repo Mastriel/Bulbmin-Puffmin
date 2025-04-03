@@ -16,7 +16,6 @@ import {getType, invalidRequest, onCustom, parseJSONMessage} from "./index";
 import {WebSocketServer, WebSocket} from "ws";
 import {ConnectedClient, connectedClients} from "./clientWebsockets";
 import https from "https"
-import {createHeartbeatInterval} from "./heartbeat";
 
 
 
@@ -152,7 +151,3 @@ wss.on("connection", (webWs: WebSocket) => {
         webClient.parent.webClients.delete(webClient)
     })
 })
-
-const heartbeatInterval = createHeartbeatInterval(wss)
-
-wss.on('close', () => clearInterval(heartbeatInterval))

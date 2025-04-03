@@ -1,7 +1,7 @@
-import {serializingStoredFetchable} from "./fetchable";
+import {serializingStoredFetchable, usePersist} from "./fetchable.svelte";
 import type {Pressable} from "./input";
-import {v4 as uuid} from 'uuid';
 import {ALL_PRESSABLES} from "./input";
+import {v4 as uuid} from 'uuid';
 
 type PresetData = {
     name: string,
@@ -16,7 +16,7 @@ type PresetsData = {
 
 export class Presets {
 
-    private readonly _data : PresetData[]
+    private readonly _data : PresetData[] = $state([])
 
     public get data() : readonly PresetData[] { return this._data }
 
@@ -27,12 +27,10 @@ export class Presets {
     public createPreset(name: string) : string {
         let id = uuid()
         this._data.push({name, id, keys: [], removable: true})
-        this.update()
         return id
     }
 
     public getPreset(id: string) : PresetData | undefined {
-
         return this._data.find(it => it.id == id)
     }
 
@@ -40,11 +38,6 @@ export class Presets {
         let preset = this._data.findIndex(it => it.id == id)
         if (preset == -1) return
         this._data.splice(preset, 1)
-        this.update()
-    }
-
-    public update() {
-        presets.update((it) => it)
     }
 }
 
@@ -56,8 +49,7 @@ const serialize = (presets: Presets): PresetsData => {
 }
 
 const deserialize = (data: PresetsData) : Presets => {
-    let presets = new Presets(data.data)
-    return presets
+    return new Presets(data.data)
 }
 
 
@@ -101,4 +93,4 @@ const defaultPresets = new Presets([
     },
 ])
 
-export let presets = serializingStoredFetchable<Presets, PresetsData>("presets_data", defaultPresets, serialize, deserialize)
+export let presets = usePersist<Presets, PresetsData>("presets_data", defaultPresets, serialize, deserialize)

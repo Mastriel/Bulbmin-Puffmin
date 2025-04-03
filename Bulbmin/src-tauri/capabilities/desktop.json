@@ -6,9 +6,11 @@
     "linux"
   ],
   "windows": [
-    "main"
+    "main",
+    "keyboard"
   ],
   "permissions": [
-    "global-shortcut:default"
+    "global-shortcut:default",
+    "core:webview:allow-create-webview-window"
   ]
 }

@@ -42,9 +42,4 @@ export type WebClient = {
     clientPaused: boolean
 }
 
-export const heartbeatTimeout = (ws: WebSocket) => {
-    ws.close(1000, "Timeout")
-    console.log("Connection closed due to timeout")
-}
-
 export const webClient : Fetchable<WebClient | undefined> = fetchable(undefined)

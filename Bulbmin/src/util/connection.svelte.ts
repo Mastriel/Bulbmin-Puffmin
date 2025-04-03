@@ -1,16 +1,15 @@
-import type {Writable, Readable, Subscriber, Invalidator, Unsubscriber} from "svelte/store";
-import {writable} from "svelte/store";
-import {type Fetchable, fetchable} from "./fetchable";
+import {type StatePtr, useStatePtr} from "./fetchable.svelte";
 import {AppSettings} from "./settings";
 import type {
     ClientboundUserConnect, ClientboundUserDisconnect, ClientboundUserKeyPress, ClientboundUserKeyUnpress,
     ClientConnectToServerRequest, FromClientSetAvailableKeys, FromClientSetPaused, FromClientUserKick,
     HandshakeResponse, ServerboundUserAccept
 } from "communication/src/connections";
-import {heartbeatTimeout, onCustom, parseJSONMessage} from "bulbmin-web/src/connection";
+import {onCustom, parseJSONMessage} from "bulbmin-web/src/connection";
 import type {Pressable} from "./input";
 import {Input} from "./input";
-import {toaster} from "./toast";
+import {toaster} from "./toast.svelte";
+import {SvelteSet} from "svelte/reactivity";
 
 
 export type ConnectedUser = {
@@ -21,8 +20,8 @@ export type ConnectedUser = {
 }
 
 export class Client {
-    public ws: WebSocket
-    public connectedUsers: ConnectedUser[] = []
+    public ws: WebSocket = $state.raw(undefined!)
+    public connectedUsers: ConnectedUser[] = $state([])
 
     public state: "connecting" | "connected"
 
@@ -33,35 +32,28 @@ export class Client {
 
         this.state = "connecting"
         this.ws.addEventListener("open", () => {
-            let timeout = setTimeout(() => heartbeatTimeout(ws), 8000)
 
             this.ws.send(JSON.stringify(<ClientConnectToServerRequest>{
                 type: "handshake_request",
                 name: AppSettings["room-name"],
                 password: AppSettings["password"],
             }))
-            this.ws.addEventListener("message", (evt) => {
-                if (evt.data != "ping") return
-                clearTimeout(timeout)
-                timeout = setTimeout(() => heartbeatTimeout(ws), 8000)
-                this.ws.send("pong")
-            })
 
             onCustom<HandshakeResponse>(this.ws, "handshake_response", ["result"], (message, request) => {
                 this.state = "connected"
-                toaster.push({body: `Sucessfully connected to Puffmin`})
+                toaster.$.push({body: `Sucessfully connected to Puffmin`})
             })
 
             onCustom<ClientboundUserConnect>(this.ws, "user_connect", ["username"], (message, request) => {
-                this.connectedUsers.push({
+                const user = $state({
                     username: request.username,
                     availableKeys: [],
-                    keysHeld: new Set<Pressable>(),
+                    keysHeld: new SvelteSet<Pressable>(),
                     authenticated: false
                 })
-                toaster.push({body: `${request.username} has requested to join.`})
+                this.connectedUsers.push(user)
+                toaster.$.push({body: `${request.username} has requested to join.`})
                 console.log("user connect!")
-                this.update()
             })
 
             onCustom<ClientboundUserDisconnect>(this.ws, "user_disconnect", ["username"], (message, request) => {
@@ -75,10 +67,9 @@ export class Client {
                     }
                     if (shouldRelease) await Input.release(it)
                 })
-                toaster.push({body: `${request.username} has left.`})
+                toaster.$.push({body: `${request.username} has left.`})
 
                 this.connectedUsers = this.connectedUsers.filter(it => it.username != request.username)
-                this.update()
             })
 
             onCustom<ClientboundUserKeyPress>(this.ws, "user_keypress", ["username", "key"], async (message, request) => {
@@ -89,7 +80,6 @@ export class Client {
 
                 user?.keysHeld.add(<Pressable>request.key)
                 await Input.press(<Pressable>request.key)
-                this.update()
             })
 
             onCustom<ClientboundUserKeyUnpress>(this.ws, "user_keyunpress", ["username", "key"], async (message, request) => {
@@ -108,21 +98,20 @@ export class Client {
                     }
                 }
                 if (shouldRelease) await Input.release(<Pressable>request.key)
-                this.update()
             })
         })
 
         this.ws.addEventListener("error", () => {
-            client.set(undefined)
-            connectionError.set("A connection error has occurred.")
+            client.$ = undefined
+            connectionError.$ = "A connection error has occurred."
         })
 
         this.ws.addEventListener("close", (msg) => {
-            client.set(undefined)
+            client.$ = undefined
 
             console.log("Connection closed: ", msg)
 
-            connectionError.set("Connection closed: " + msg.reason)
+            connectionError.$ = "Connection closed: " + msg.reason
         })
 
     }
@@ -134,7 +123,6 @@ export class Client {
             keys: keys
         }))
         user.availableKeys = keys
-        this.update()
     }
 
     public kick(user: ConnectedUser) {
@@ -150,7 +138,6 @@ export class Client {
             username: user.username
         }))
         user.authenticated = true
-        this.update()
     }
 
     public deny(user: ConnectedUser) {
@@ -158,17 +145,13 @@ export class Client {
             type: "user_deny",
             username: user.username
         }))
-        this.update()
-
     }
 
     public getUser(name: string) : ConnectedUser | undefined {
         return this.connectedUsers.find(it => it.username == name)
     }
 
-    private update = () => client.update(it => it)
-
-    private _paused : boolean = false
+    private _paused : boolean = $state(false)
     public get paused() { return this._paused }
     public set paused(value) {
         this._paused = value;
@@ -182,7 +165,6 @@ export class Client {
             type: "set_paused",
             paused: value
         }))
-        this.update()
     }
 
     public close() {
@@ -190,5 +172,5 @@ export class Client {
     }
 }
 
-export const client : Fetchable<Client | undefined> = fetchable()
-export const connectionError : Writable<string | undefined> = fetchable()
+export const client : StatePtr<Client | undefined> = useStatePtr(undefined!)
+export const connectionError : StatePtr<string | undefined> = useStatePtr(undefined!)
